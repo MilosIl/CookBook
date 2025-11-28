@@ -1,6 +1,5 @@
 import { Drawer } from 'expo-router/drawer';
-
-export default function UserLayout() {
+function RecipesLayout() {
   return (
     <Drawer>
       <Drawer.Screen
@@ -20,3 +19,4 @@ export default function UserLayout() {
     </Drawer>
   );
 }
+export default RecipesLayout;
