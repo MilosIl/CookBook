@@ -9,9 +9,9 @@ export default function RootLayout() {
         <Stack.Protected guard>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack.Protected>
+        <Stack.Screen name="recipes" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)/login" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)/signup" options={{ headerShown: false }} />
-        <Stack.Screen name="recipe/[...id]" options={{ headerShown: false }} />
       </Stack>
     </GluestackUIProvider>
   );
