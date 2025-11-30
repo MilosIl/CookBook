@@ -1,8 +1,8 @@
 import RecipeCard, { Recipe } from '@/components/RecipeCard/RecipeCard';
 import { Link } from 'expo-router';
 import { FlatList, Text, View } from 'react-native';
-import data from '../../recipe-data.json';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import data from '../../recipe-data.json';
 
 const HomeScreen = () => {
   const NoRecipes = () => {
@@ -22,6 +22,9 @@ const HomeScreen = () => {
   };
   return (
     <SafeAreaView className="flex-1 mx-auto">
+      <Link href={'/(auth)/login'}>
+        <Text>Login</Text>
+      </Link>
       <FlatList
         data={data}
         renderItem={RecipeItem}

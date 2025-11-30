@@ -2,7 +2,8 @@
 import React from 'react';
 import { createToastHook } from '@gluestack-ui/core/toast/creator';
 import { AccessibilityInfo, Text, View, ViewStyle } from 'react-native';
-import { tva ,
+import {
+  tva,
   withStyleContext,
   useStyleContext,
 } from '@gluestack-ui/utils/nativewind-utils';
