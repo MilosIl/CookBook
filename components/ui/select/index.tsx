@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { tva ,
+import {
+  tva,
   withStyleContext,
   useStyleContext,
 } from '@gluestack-ui/utils/nativewind-utils';
