@@ -40,8 +40,18 @@ const SignUpScreen = () => {
     resolver: zodResolver(signupSchema),
   });
   const { signup } = useAuthStore();
-  const onSubmit: SubmitHandler<SignupFormData> = async (data) => {
-    signup(data.email, data.password, data.firstName, data.lastName);
+  const onSubmit: SubmitHandler<SignupFormData> = async ({
+    email,
+    password,
+    firstName,
+    lastName,
+  }) => {
+    await signup({
+      email,
+      password,
+      firstName,
+      lastName,
+    });
   };
 
   return (
