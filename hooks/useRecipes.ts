@@ -1,0 +1,272 @@
+import { supabase } from '@/lib/supabase';
+import { Recipe } from '@/store/recipe';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+export const recipeKeys = {
+  all: ['recipes'] as const,
+  lists: () => [...recipeKeys.all, 'list'] as const,
+  list: (filters: string) => [...recipeKeys.lists(), { filters }] as const,
+  details: () => [...recipeKeys.all, 'detail'] as const,
+  detail: (id: string) => [...recipeKeys.details(), id] as const,
+  userRecipes: (userId: string) => [...recipeKeys.all, 'user', userId] as const,
+  likedRecipes: (userId: string) =>
+    [...recipeKeys.all, 'liked', userId] as const,
+  favoriteRecipes: (ids: string[]) =>
+    [...recipeKeys.all, 'favorites', ids] as const,
+};
+
+export function useRecipes(type?: 'breakfast' | 'lunch' | 'dinner') {
+  return useQuery({
+    queryKey: recipeKeys.list(type || 'all'),
+    queryFn: async () => {
+      let query = supabase
+        .from('recipes')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (type) {
+        query = query.eq('type', type);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data as Recipe[];
+    },
+  });
+}
+
+export function useRecipe(id: string) {
+  return useQuery({
+    queryKey: recipeKeys.detail(id),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('recipes')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) throw error;
+      return data as Recipe;
+    },
+    enabled: !!id,
+  });
+}
+
+export function useUserRecipes(userId: string | undefined) {
+  return useQuery({
+    queryKey: recipeKeys.userRecipes(userId || ''),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('recipes')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      return data as Recipe[];
+    },
+    enabled: !!userId,
+  });
+}
+
+export function useLikedRecipeIds(userId: string | undefined) {
+  return useQuery({
+    queryKey: recipeKeys.likedRecipes(userId || ''),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('liked_recipes')
+        .select('recipe_id')
+        .eq('user_id', userId);
+
+      if (error) throw error;
+      return data?.map((item) => item.recipe_id) || [];
+    },
+    enabled: !!userId,
+  });
+}
+
+export function useFavoriteRecipes(recipeIds: string[]) {
+  return useQuery({
+    queryKey: recipeKeys.favoriteRecipes(recipeIds),
+    queryFn: async () => {
+      if (recipeIds.length === 0) {
+        return [];
+      }
+
+      const { data, error } = await supabase
+        .from('recipes')
+        .select('*')
+        .in('id', recipeIds);
+
+      if (error) throw error;
+      return data as Recipe[];
+    },
+    enabled: recipeIds.length > 0,
+  });
+}
+
+export function useCreateRecipe() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (recipe: Omit<Recipe, 'id' | 'created_at'>) => {
+      const { data, error } = await supabase
+        .from('recipes')
+        .insert(recipe)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as Recipe;
+    },
+    onSuccess: (newRecipe) => {
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+
+      if (newRecipe.user_id) {
+        queryClient.invalidateQueries({
+          queryKey: recipeKeys.userRecipes(newRecipe.user_id),
+        });
+      }
+    },
+  });
+}
+
+export function useUpdateRecipe() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      updates,
+    }: {
+      id: string;
+      updates: Partial<Recipe>;
+    }) => {
+      const { data, error } = await supabase
+        .from('recipes')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as Recipe;
+    },
+    onSuccess: (updatedRecipe) => {
+      queryClient.setQueryData(
+        recipeKeys.detail(updatedRecipe.id),
+        updatedRecipe
+      );
+
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+    },
+  });
+}
+
+export function useDeleteRecipe() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('recipes').delete().eq('id', id);
+      if (error) throw error;
+      return id;
+    },
+    onSuccess: (deletedId) => {
+      queryClient.removeQueries({ queryKey: recipeKeys.detail(deletedId) });
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+    },
+  });
+}
+
+export function useLikeRecipe() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      userId,
+      recipeId,
+    }: {
+      userId: string;
+      recipeId: string;
+    }) => {
+      const { error: likeError } = await supabase
+        .from('liked_recipes')
+        .insert({ user_id: userId, recipe_id: recipeId });
+
+      if (likeError) throw likeError;
+
+      const { error: updateError } = await supabase.rpc('increment_likes', {
+        recipe_id: recipeId,
+      });
+
+      if (updateError) {
+        const { data: recipe } = await supabase
+          .from('recipes')
+          .select('likes')
+          .eq('id', recipeId)
+          .single();
+
+        if (recipe) {
+          await supabase
+            .from('recipes')
+            .update({ likes: recipe.likes + 1 })
+            .eq('id', recipeId);
+        }
+      }
+
+      return { userId, recipeId };
+    },
+    onSuccess: ({ userId, recipeId }) => {
+      queryClient.invalidateQueries({
+        queryKey: recipeKeys.likedRecipes(userId),
+      });
+      queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) });
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+    },
+  });
+}
+
+export function useUnlikeRecipe() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      userId,
+      recipeId,
+    }: {
+      userId: string;
+      recipeId: string;
+    }) => {
+      const { error: unlikeError } = await supabase
+        .from('liked_recipes')
+        .delete()
+        .eq('user_id', userId)
+        .eq('recipe_id', recipeId);
+
+      if (unlikeError) throw unlikeError;
+
+      const { data: recipe } = await supabase
+        .from('recipes')
+        .select('likes')
+        .eq('id', recipeId)
+        .single();
+
+      if (recipe && recipe.likes > 0) {
+        await supabase
+          .from('recipes')
+          .update({ likes: recipe.likes - 1 })
+          .eq('id', recipeId);
+      }
+
+      return { userId, recipeId };
+    },
+    onSuccess: ({ userId, recipeId }) => {
+      queryClient.invalidateQueries({
+        queryKey: recipeKeys.likedRecipes(userId),
+      });
+      queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) });
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+    },
+  });
+}

@@ -5,8 +5,8 @@ function RecipesLayout() {
       <Drawer.Screen
         name="recipes"
         options={{
-          drawerLabel: 'Recipes',
-          title: 'Recipes title',
+          drawerLabel: 'My Recipes',
+          title: 'My Recipes',
         }}
       />
       <Drawer.Screen
