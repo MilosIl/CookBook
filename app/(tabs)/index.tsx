@@ -61,7 +61,6 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 mx-auto">
-
       <View className="mb-4 px-4">
         <Text className="mb-2 font-bold text-lg">Filter by type:</Text>
         <Select

@@ -1,3 +1,4 @@
+import { SignupFormData } from '@/components/SingupForm/SignupForm';
 import { supabase } from '@/lib/supabase';
 import { Session, User } from '@supabase/supabase-js';
 import { create } from 'zustand';
@@ -8,12 +9,7 @@ type DatabaseUser = {
   first_name: string;
   last_name: string;
 };
-type SignUpForm = {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-};
+type SignUpForm = Omit<SignupFormData, 'confirmPassword'>;
 type AuthState = {
   session: Session | null;
   user: User | null;
@@ -24,7 +20,12 @@ type AuthState = {
 
 type AuthActions = {
   login: (email: string, password: string) => Promise<void>;
-  signup: (T: SignUpForm) => Promise<void>;
+  signup: ({
+    email,
+    password,
+    firstName,
+    lastName,
+  }: SignUpForm) => Promise<{ error: string | undefined }>;
   logout: () => Promise<void>;
   fetchDbUser: () => Promise<void>;
   updateDbUser: (firstName: string, lastName: string) => Promise<void>;
@@ -35,14 +36,12 @@ type AuthActions = {
 type AuthStore = AuthState & AuthActions;
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
-  // Initial state
   session: null,
   user: null,
   dbUser: null,
   isLoading: false,
   error: null,
 
-  // Actions
   login: async (email: string, password: string) => {
     set({ isLoading: true, error: null });
     try {
@@ -59,7 +58,6 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         isLoading: false,
       });
 
-      // Fetch database user profile
       await get().fetchDbUser();
     } catch (error) {
       set({
@@ -77,17 +75,30 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         email,
         password,
       });
+      console.log(error);
+      if (error) {
+        set({ isLoading: false, error: error.message });
+        return { error: error.message };
+      }
+
+      if (!data.user) {
+        const errorMsg = 'User creation failed';
+        set({ isLoading: false, error: errorMsg });
+        return { error: errorMsg };
+      }
+
       const { error: userError } = await supabase.from('users').insert({
-        id: data?.user?.id,
-        email: data?.user?.email,
+        id: data.user.id,
+        email: data.user.email,
         first_name: firstName,
         last_name: lastName,
       });
 
-      if (error) throw new Error(error.message);
-      if (!data.user) throw new Error('User creation failed');
+      if (userError) {
+        set({ isLoading: false, error: userError.message });
+        return { error: userError.message };
+      }
 
-      if (userError) throw new Error(userError.message);
       set({
         session: data.session,
         user: data.user,
@@ -95,12 +106,14 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       });
 
       await get().fetchDbUser();
+      return { error: undefined };
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Signup failed';
       set({
-        error: error instanceof Error ? error.message : 'Signup failed',
+        error: errorMsg,
         isLoading: false,
       });
-      throw error;
+      return { error: errorMsg };
     }
   },
 
@@ -152,7 +165,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       const { data, error } = await supabase
         .from('users')
         .update({
-          name: `${firstName} ${lastName}`,
+          first_name: firstName,
+          last_name: lastName,
         })
         .eq('id', user.id)
         .select()
