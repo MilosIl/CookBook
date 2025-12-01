@@ -1,14 +1,15 @@
+import { useResolvedTheme } from '@/store/theme';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRouter } from 'expo-router';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 const RecipesScreen = () => {
   const router = useRouter();
+  const theme = useResolvedTheme();
+  const isDark = theme === 'dark';
 
   return (
-    <View className="flex-1">
-      <Text>Screen mojih recepta</Text>
-
+    <View className={`flex-1 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
       <Pressable
         onPress={() => router.push('/recipes/new')}
         className="right-6 bottom-6 absolute justify-center items-center bg-orange-500 active:bg-orange-600 shadow-lg rounded-full w-16 h-16"

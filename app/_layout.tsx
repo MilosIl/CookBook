@@ -1,15 +1,18 @@
 import '@/global.css';
 import Providers from '@/providers/Providers';
-import { useAuthStore } from '@/store/auth';
+// import { useAuthStore } from '@/store/auth';
 import { useOnboardingStore } from '@/store/onboarding';
+import { useResolvedTheme } from '@/store/theme';
 import { checkNetwork } from '@/utils/checkNetwork';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
+import { StatusBar } from 'react-native';
 
 export default function RootLayout() {
-  const { session } = useAuthStore();
+  // const { session } = useAuthStore();
   const { hasCompletedOnboarding, isLoading, checkOnboardingStatus } =
     useOnboardingStore();
+  const theme = useResolvedTheme();
 
   useEffect(() => {
     checkOnboardingStatus();
@@ -23,23 +26,38 @@ export default function RootLayout() {
   if (!hasCompletedOnboarding) {
     return (
       <Providers>
-        <Stack>
-          <Stack.Screen name="(onBoarding)" options={{ headerShown: false }} />
-        </Stack>
+        <>
+          <StatusBar
+            barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+            backgroundColor={theme === 'dark' ? '#1f2937' : '#ffffff'}
+          />
+          <Stack>
+            <Stack.Screen
+              name="(onBoarding)"
+              options={{ headerShown: false }}
+            />
+          </Stack>
+        </>
       </Providers>
     );
   }
 
   return (
     <Providers>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Protected guard={!!session}>
+      <>
+        <StatusBar
+          barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+          backgroundColor={theme === 'dark' ? '#1f2937' : '#ffffff'}
+        />
+        <Stack screenOptions={{ headerShown: false }}>
+          {/* <Stack.Protected guard={!!session}> */}
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="recipes" />
-        </Stack.Protected>
-        <Stack.Screen name="(auth)/login" />
-        <Stack.Screen name="(auth)/signup" />
-      </Stack>
+          {/* </Stack.Protected> */}
+          <Stack.Screen name="(auth)/login" />
+          <Stack.Screen name="(auth)/signup" />
+        </Stack>
+      </>
     </Providers>
   );
 }
