@@ -1,7 +1,7 @@
 import '@/global.css';
 import Providers from '@/providers/Providers';
-// import { useAuthStore } from '@/store/auth';
-import { useOnboardingStore } from '@/store/onboarding';
+import { useAuthStore } from '@/store/auth';
+import useOnboardingStore from '@/store/onboarding';
 import { useResolvedTheme } from '@/store/theme';
 import { checkNetwork } from '@/utils/checkNetwork';
 import { Stack } from 'expo-router';
@@ -9,15 +9,16 @@ import { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 
 export default function RootLayout() {
-  // const { session } = useAuthStore();
+  const { checkSession } = useAuthStore();
   const { hasCompletedOnboarding, isLoading, checkOnboardingStatus } =
     useOnboardingStore();
   const theme = useResolvedTheme();
 
   useEffect(() => {
     checkOnboardingStatus();
+    checkSession();
     checkNetwork();
-  }, [checkOnboardingStatus]);
+  }, [checkOnboardingStatus, checkSession]);
 
   if (isLoading) {
     return null;
@@ -50,10 +51,8 @@ export default function RootLayout() {
           backgroundColor={theme === 'dark' ? '#1f2937' : '#ffffff'}
         />
         <Stack screenOptions={{ headerShown: false }}>
-          {/* <Stack.Protected guard={!!session}> */}
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="recipes" />
-          {/* </Stack.Protected> */}
           <Stack.Screen name="(auth)/login" />
           <Stack.Screen name="(auth)/signup" />
         </Stack>

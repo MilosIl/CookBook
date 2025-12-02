@@ -1,4 +1,5 @@
 import SignupForm, { SignupFormData } from '@/components/SingupForm/SignupForm';
+import { useRouter } from 'expo-router';
 import { useAuthStore } from '@/store/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -39,6 +40,7 @@ const SignUpScreen = () => {
     resolver: zodResolver(signupSchema),
   });
   const { signup } = useAuthStore();
+  const router = useRouter();
   const onSubmit: SubmitHandler<SignupFormData> = async ({
     email,
     password,
@@ -51,6 +53,7 @@ const SignUpScreen = () => {
       firstName,
       lastName,
     });
+    router.push('/(tabs)');
   };
 
   return (

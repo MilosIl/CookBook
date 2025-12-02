@@ -1,3 +1,4 @@
+import ThemedInput from '@/components/ThemedInput';
 import { Button, ButtonText } from '@/components/ui/button';
 import {
   FormControl,
@@ -10,7 +11,6 @@ import {
   FormControlLabelText,
 } from '@/components/ui/form-control';
 import { AlertCircleIcon } from '@/components/ui/icon';
-import { Input, InputField } from '@/components/ui/input';
 import { VStack } from '@/components/ui/vstack';
 import { Link } from 'expo-router';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
@@ -47,15 +47,14 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
             control={control}
             name="firstName"
             render={({ field: { onChange, onBlur, value } }) => (
-              <Input className="my-1" size="md">
-                <InputField
-                  type="text"
-                  placeholder="First name"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
-              </Input>
+              <ThemedInput
+                placeholder="First name"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                variant="underlined"
+                className="my-1"
+              />
             )}
           />
           <FormControlError>
@@ -78,15 +77,14 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
             control={control}
             name="lastName"
             render={({ field: { onChange, onBlur, value } }) => (
-              <Input className="my-1" size="md">
-                <InputField
-                  type="text"
-                  placeholder="Last name"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
-              </Input>
+              <ThemedInput
+                placeholder="Last name"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                variant="underlined"
+                className="my-1"
+              />
             )}
           />
           <FormControlError>
@@ -110,15 +108,14 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
             control={control}
             name="email"
             render={({ field: { onChange, onBlur, value } }) => (
-              <Input className="my-1" size="md">
-                <InputField
-                  type="text"
-                  placeholder="Email"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
-              </Input>
+              <ThemedInput
+                placeholder="Email"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                variant="underlined"
+                className="my-1"
+              />
             )}
           />
           <FormControlError>
@@ -142,15 +139,15 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
             control={control}
             name="password"
             render={({ field: { onChange, onBlur, value } }) => (
-              <Input className="my-1" size="md">
-                <InputField
-                  type="password"
-                  placeholder="Password"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
-              </Input>
+              <ThemedInput
+                placeholder="Password"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                variant="underlined"
+                isPassword
+                className="my-1"
+              />
             )}
           />
           <FormControlHelper>
@@ -179,15 +176,15 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
             control={control}
             name="confirmPassword"
             render={({ field: { onChange, onBlur, value } }) => (
-              <Input className="my-1" size="md">
-                <InputField
-                  type="password"
-                  placeholder="Confirm Password"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
-              </Input>
+              <ThemedInput
+                placeholder="Confirm Password"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                variant="underlined"
+                isPassword
+                className="my-1"
+              />
             )}
           />
           <FormControlHelper>

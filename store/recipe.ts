@@ -14,6 +14,7 @@ export type Recipe = {
   preparation: string;
   user_id?: string;
   created_at?: string;
+  is_public?: boolean;
 };
 
 export type RecipeGroup = {
@@ -87,7 +88,7 @@ export const useRecipeStore = create<RecipeClientStore>()(
       isFavorite: (recipeId) => get().favoriteRecipeIds.includes(recipeId),
     }),
     {
-      name: 'recipe-storage',
+      name: 'recipe',
       storage: createJSONStorage(() => AsyncStorage),
 
       partialize: (state) => ({

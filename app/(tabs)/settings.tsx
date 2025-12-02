@@ -1,16 +1,17 @@
+import ThemedInput from '@/components/ThemedInput';
 import { Heading } from '@/components/ui/heading';
 import { HStack } from '@/components/ui/hstack';
-import { Input, InputField } from '@/components/ui/input';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { useAuthStore } from '@/store/auth';
 import { useThemeStore } from '@/store/theme';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'expo-router';
 import { Moon, Sun, User, X } from 'lucide-react-native';
 import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { Modal, Pressable, Switch, View } from 'react-native';
+import { Alert, Modal, Pressable, Switch, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { z } from 'zod';
 
@@ -47,8 +48,14 @@ const SettingsScreen = () => {
       await updateDbUser(data.firstName, data.lastName);
       setIsModalOpen(false);
       reset(data);
+      Alert.alert('Success', 'Your profile has been updated successfully!', [
+        { text: 'OK' },
+      ]);
     } catch (error) {
       console.error('Failed to update profile:', error);
+      Alert.alert('Error', 'Failed to update profile. Please try again.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -76,7 +83,6 @@ const SettingsScreen = () => {
         </Heading>
 
         <VStack space="2xl">
-          {/* User Info Section */}
           <View
             className={`${isDark ? 'bg-gray-800' : 'bg-orange-50'} rounded-xl p-6`}
           >
@@ -107,7 +113,6 @@ const SettingsScreen = () => {
             </Pressable>
           </View>
 
-          {/* Theme Toggle Section */}
           <View
             className={`${isDark ? 'bg-gray-800' : 'bg-gray-50'} rounded-xl p-6`}
           >
@@ -140,7 +145,6 @@ const SettingsScreen = () => {
             </HStack>
           </View>
 
-          {/* Logout Button */}
           <Pressable
             onPress={handleLogout}
             className="items-center bg-red-500 active:bg-red-600 mt-4 py-4 rounded-lg"
@@ -149,7 +153,6 @@ const SettingsScreen = () => {
           </Pressable>
         </VStack>
 
-        {/* Edit Profile Modal */}
         <Modal
           visible={isModalOpen}
           animationType="slide"
@@ -183,18 +186,14 @@ const SettingsScreen = () => {
                     control={control}
                     name="firstName"
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <Input
+                      <ThemedInput
+                        placeholder="Enter first name"
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        variant="underlined"
                         className={errors.firstName ? 'border-red-500' : ''}
-                      >
-                        <InputField
-                          placeholder="Enter first name"
-                          value={value}
-                          onChangeText={onChange}
-                          onBlur={onBlur}
-                          className={isDark ? 'text-white' : 'text-gray-900'}
-                          placeholderTextColor={isDark ? '#9ca3af' : '#6b7280'}
-                        />
-                      </Input>
+                      />
                     )}
                   />
                   {errors.firstName && (
@@ -214,18 +213,14 @@ const SettingsScreen = () => {
                     control={control}
                     name="lastName"
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <Input
+                      <ThemedInput
+                        placeholder="Enter last name"
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        variant="underlined"
                         className={errors.lastName ? 'border-red-500' : ''}
-                      >
-                        <InputField
-                          placeholder="Enter last name"
-                          value={value}
-                          onChangeText={onChange}
-                          onBlur={onBlur}
-                          className={isDark ? 'text-white' : 'text-gray-900'}
-                          placeholderTextColor={isDark ? '#9ca3af' : '#6b7280'}
-                        />
-                      </Input>
+                      />
                     )}
                   />
                   {errors.lastName && (

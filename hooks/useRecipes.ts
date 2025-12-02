@@ -9,8 +9,6 @@ export const recipeKeys = {
   details: () => [...recipeKeys.all, 'detail'] as const,
   detail: (id: string) => [...recipeKeys.details(), id] as const,
   userRecipes: (userId: string) => [...recipeKeys.all, 'user', userId] as const,
-  likedRecipes: (userId: string) =>
-    [...recipeKeys.all, 'liked', userId] as const,
   favoriteRecipes: (ids: string[]) =>
     [...recipeKeys.all, 'favorites', ids] as const,
   topLiked: () => [...recipeKeys.all, 'top-liked'] as const,
@@ -23,6 +21,7 @@ export function useRecipes(type?: 'breakfast' | 'lunch' | 'dinner') {
       let query = supabase
         .from('recipes')
         .select('*')
+        .eq('is_public', true)
         .order('created_at', { ascending: false });
 
       if (type) {
@@ -70,22 +69,6 @@ export function useUserRecipes(userId: string | undefined) {
   });
 }
 
-export function useLikedRecipeIds(userId: string | undefined) {
-  return useQuery({
-    queryKey: recipeKeys.likedRecipes(userId || ''),
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('liked_recipes')
-        .select('recipe_id')
-        .eq('user_id', userId);
-
-      if (error) throw error;
-      return data?.map((item) => item.recipe_id) || [];
-    },
-    enabled: !!userId,
-  });
-}
-
 export function useFavoriteRecipes(recipeIds: string[]) {
   return useQuery({
     queryKey: recipeKeys.favoriteRecipes(recipeIds),
@@ -113,6 +96,7 @@ export function useTopLikedRecipes(limit: number = 3) {
       const { data, error } = await supabase
         .from('recipes')
         .select('*')
+        .eq('is_public', true)
         .order('likes', { ascending: false })
         .limit(limit);
 
@@ -196,6 +180,27 @@ export function useDeleteRecipe() {
   });
 }
 
+export function useShareRecipe() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (recipe: Omit<Recipe, 'id' | 'created_at'>) => {
+      const { data, error } = await supabase
+        .from('recipes')
+        .insert({ ...recipe, is_public: true })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data as Recipe;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: recipeKeys.topLiked() });
+    },
+  });
+}
+
 export function useLikeRecipe() {
   const queryClient = useQueryClient();
 
@@ -207,39 +212,27 @@ export function useLikeRecipe() {
       userId: string;
       recipeId: string;
     }) => {
-      const { error: likeError } = await supabase
-        .from('liked_recipes')
-        .insert({ user_id: userId, recipe_id: recipeId });
+      const { data: recipe } = await supabase
+        .from('recipes')
+        .select('likes')
+        .eq('id', recipeId)
+        .single();
 
-      if (likeError) throw likeError;
+      if (!recipe) throw new Error('Recipe not found');
 
-      const { error: updateError } = await supabase.rpc('increment_likes', {
-        recipe_id: recipeId,
-      });
+      const { error: updateError } = await supabase
+        .from('recipes')
+        .update({ likes: recipe.likes + 1 })
+        .eq('id', recipeId);
 
-      if (updateError) {
-        const { data: recipe } = await supabase
-          .from('recipes')
-          .select('likes')
-          .eq('id', recipeId)
-          .single();
-
-        if (recipe) {
-          await supabase
-            .from('recipes')
-            .update({ likes: recipe.likes + 1 })
-            .eq('id', recipeId);
-        }
-      }
+      if (updateError) throw updateError;
 
       return { userId, recipeId };
     },
     onSuccess: ({ userId, recipeId }) => {
-      queryClient.invalidateQueries({
-        queryKey: recipeKeys.likedRecipes(userId),
-      });
       queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) });
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: recipeKeys.topLiked() });
     },
   });
 }
@@ -255,35 +248,28 @@ export function useUnlikeRecipe() {
       userId: string;
       recipeId: string;
     }) => {
-      const { error: unlikeError } = await supabase
-        .from('liked_recipes')
-        .delete()
-        .eq('user_id', userId)
-        .eq('recipe_id', recipeId);
-
-      if (unlikeError) throw unlikeError;
-
       const { data: recipe } = await supabase
         .from('recipes')
         .select('likes')
         .eq('id', recipeId)
         .single();
 
-      if (recipe && recipe.likes > 0) {
-        await supabase
-          .from('recipes')
-          .update({ likes: recipe.likes - 1 })
-          .eq('id', recipeId);
-      }
+      if (!recipe) throw new Error('Recipe not found');
+
+      const newLikes = Math.max(0, recipe.likes - 1);
+      const { error: updateError } = await supabase
+        .from('recipes')
+        .update({ likes: newLikes })
+        .eq('id', recipeId);
+
+      if (updateError) throw updateError;
 
       return { userId, recipeId };
     },
     onSuccess: ({ userId, recipeId }) => {
-      queryClient.invalidateQueries({
-        queryKey: recipeKeys.likedRecipes(userId),
-      });
       queryClient.invalidateQueries({ queryKey: recipeKeys.detail(recipeId) });
       queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: recipeKeys.topLiked() });
     },
   });
 }
