@@ -34,13 +34,13 @@ const DailyRecipeCard = ({ recipe, isDark }: DailyRecipeCardProps) => {
   return (
     <>
       <Text
-        className={`font-bold m-4 text-lg mb-2 self-start  ${isDark ? 'text-gray-200' : 'text-gray-800'}`}
+        className={`font-bold m-4 text-lg mb-2 self-start  ${isDark ? 'text-typography-600' : 'text-typography-800'}`}
       >
-        Suggest what to eat
+        Chef&apos;s recommendation
       </Text>
       <TouchableOpacity>
         <Box
-          className={`items-center gap-3 m-4 p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-orange-400/35'}`}
+          className={`items-center gap-3 m-4 p-4 rounded-lg ${isDark ? 'bg-background-800' : 'bg-primary-50'}`}
         >
           <Skeleton
             variant="rounded"
@@ -58,13 +58,13 @@ const DailyRecipeCard = ({ recipe, isDark }: DailyRecipeCardProps) => {
           <Link href={`/recipes/${recipe.id}`}>
             <VStack className="gap-2 mt-4 w-full">
               <Text
-                className={`font-black text-2xl ${isDark ? 'text-white' : 'text-gray-900'}`}
+                className={`font-black text-2xl ${isDark ? 'text-typography-dark' : 'text-typography-white'}`}
               >
                 {recipe.name}
               </Text>
 
               <Text
-                className={`text-base ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+                className={`text-base ${isDark ? 'text-typography-200' : 'text-typography-700'}`}
               >
                 {recipe.description}
               </Text>
@@ -84,7 +84,11 @@ const DailyRecipeCard = ({ recipe, isDark }: DailyRecipeCardProps) => {
                       color="#B5652A"
                     />
                   )}
-                  <Text className={isDark ? 'text-gray-300' : 'text-gray-700'}>
+                  <Text
+                    className={
+                      isDark ? 'text-typography-200' : 'text-typography-700'
+                    }
+                  >
                     {recipe.vegan ? 'Vegan' : 'Non-vegan'}
                   </Text>
                 </HStack>
@@ -132,9 +136,11 @@ const DailyRecipe = () => {
   if (!randomRecipe) {
     return (
       <Box
-        className={`m-4 p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-orange-400/35'}`}
+        className={`m-4 p-4 rounded-lg ${isDark ? 'bg-background-800' : 'bg-primary-50'}`}
       >
-        <Text className={isDark ? 'text-white' : 'text-gray-900'}>
+        <Text
+          className={isDark ? 'text-typography-white' : 'text-typography-black'}
+        >
           No {recipeType} recipes available
         </Text>
       </Box>

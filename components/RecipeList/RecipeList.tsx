@@ -15,7 +15,9 @@ const RecipeList = ({ recipes, ListHeaderComponent }: RecipeListProps) => {
   const NoRecipes = () => {
     return (
       <View>
-        <Text className={isDark ? 'text-gray-400' : 'text-gray-600'}>
+        <Text
+          className={isDark ? 'text-typography-400' : 'text-typography-600'}
+        >
           No recipes found..
         </Text>
       </View>
@@ -37,9 +39,9 @@ const RecipeList = ({ recipes, ListHeaderComponent }: RecipeListProps) => {
       ListEmptyComponent={NoRecipes}
       ListHeaderComponent={ListHeaderComponent}
       keyExtractor={(item: Recipe) => item.id}
-      className={isDark ? 'bg-gray-900' : 'bg-white'}
+      className={isDark ? 'bg-background-dark' : 'bg-background-light'}
       contentContainerStyle={{
-        backgroundColor: isDark ? '#111827' : '#ffffff',
+        backgroundColor: isDark ? '#121212' : '#FFFFFF',
       }}
     />
   );

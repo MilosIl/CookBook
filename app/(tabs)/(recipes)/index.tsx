@@ -17,7 +17,7 @@ const FavoriteRecipes = () => {
   if (isLoading) {
     return (
       <View
-        className={`flex-1 justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}
+        className={`flex-1 justify-center items-center ${isDark ? 'bg-background-dark' : 'bg-background-light'}`}
       >
         <Spinner size="large" />
       </View>
@@ -27,10 +27,10 @@ const FavoriteRecipes = () => {
   if (favoriteRecipeIds.length === 0) {
     return (
       <View
-        className={`flex-1 justify-center items-center p-4 ${isDark ? 'bg-gray-900' : 'bg-white'}`}
+        className={`flex-1 justify-center items-center p-4 ${isDark ? 'bg-background-dark' : 'bg-background-light'}`}
       >
         <Text
-          className={`text-lg text-center ${isDark ? 'text-gray-400' : 'text-gray-500'}`}
+          className={`text-lg text-center ${isDark ? 'text-typography-400' : 'text-typography-500'}`}
         >
           You have no favorite recipes.{'\n'}
           Add some recipes to your favorites!

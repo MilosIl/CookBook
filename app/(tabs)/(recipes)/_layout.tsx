@@ -9,14 +9,14 @@ function RecipesLayout() {
     <Drawer
       screenOptions={{
         drawerStyle: {
-          backgroundColor: isDark ? '#1f2937' : '#ffffff',
+          backgroundColor: isDark ? '#1E1E1E' : '#FFFFFF',
         },
-        drawerActiveTintColor: '#f97316',
-        drawerInactiveTintColor: isDark ? '#9ca3af' : '#6b7280',
+        drawerActiveTintColor: '#FF9900',
+        drawerInactiveTintColor: isDark ? '#999999' : '#7A7A7A',
         headerStyle: {
-          backgroundColor: isDark ? '#1f2937' : '#ffffff',
+          backgroundColor: isDark ? '#1E1E1E' : '#FFFFFF',
         },
-        headerTintColor: isDark ? '#ffffff' : '#111827',
+        headerTintColor: isDark ? '#FFFFFF' : '#1A1A1A',
         headerTitleStyle: {
           fontWeight: 'bold',
         },

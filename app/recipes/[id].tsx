@@ -22,7 +22,7 @@ const RecipeScreen = () => {
   if (error || !recipe) {
     return (
       <SafeAreaView className="flex-1 justify-center items-center">
-        <Text className="text-red-500">Recipe not found</Text>
+        <Text className="text-error-500">Recipe not found</Text>
       </SafeAreaView>
     );
   }

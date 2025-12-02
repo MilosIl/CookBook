@@ -12,16 +12,16 @@ const TabsLayout = () => {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#f97316',
-        tabBarInactiveTintColor: isDark ? '#9ca3af' : '#6b7280',
+        tabBarActiveTintColor: '#FF9900',
+        tabBarInactiveTintColor: isDark ? '#999999' : '#7A7A7A',
         tabBarStyle: {
-          backgroundColor: isDark ? '#1f2937' : '#ffffff',
-          borderTopColor: isDark ? '#374151' : '#e5e7eb',
+          backgroundColor: isDark ? '#1E1E1E' : '#FFFFFF',
+          borderTopColor: isDark ? '#2A2A2A' : '#E4E4E4',
         },
         headerStyle: {
-          backgroundColor: isDark ? '#1f2937' : '#ffffff',
+          backgroundColor: isDark ? '#1E1E1E' : '#FFFFFF',
         },
-        headerTintColor: isDark ? '#ffffff' : '#111827',
+        headerTintColor: isDark ? '#FFFFFF' : '#1A1A1A',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
@@ -35,7 +35,7 @@ const TabsLayout = () => {
             <AntDesign
               name="home"
               size={24}
-              color={focused ? '#f97316' : color}
+              color={focused ? '#FF9900' : color}
             />
           ),
         }}
@@ -48,7 +48,7 @@ const TabsLayout = () => {
             <Foundation
               name="book-bookmark"
               size={24}
-              color={focused ? '#f97316' : color}
+              color={focused ? '#FF9900' : color}
             />
           ),
         }}
@@ -61,7 +61,7 @@ const TabsLayout = () => {
             <SimpleLineIcons
               name="settings"
               size={24}
-              color={focused ? '#f97316' : color}
+              color={focused ? '#FF9900' : color}
             />
           ),
         }}

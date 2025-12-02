@@ -1,3 +1,4 @@
+import { darkColors, lightColors } from '@/constants/colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from 'react-native';
 import { create } from 'zustand';
@@ -47,4 +48,16 @@ export const useResolvedTheme = () => {
   }
 
   return theme;
+};
+
+export const useTheme = () => {
+  const resolvedTheme = useResolvedTheme();
+  const isDark = resolvedTheme === 'dark';
+  const colors = isDark ? darkColors : lightColors;
+
+  return {
+    theme: resolvedTheme,
+    isDark,
+    colors,
+  };
 };

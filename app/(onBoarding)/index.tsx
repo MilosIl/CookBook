@@ -35,7 +35,7 @@ const OnBoardingScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-orange-300">
+    <SafeAreaView className="flex-1 bg-primary-300">
       <Onboarding
         onSkip={handleComplete}
         onDone={handleComplete}
