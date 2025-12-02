@@ -39,7 +39,7 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
       <VStack>
         <FormControl size="md" isInvalid={!!errors.firstName}>
           <FormControlLabel>
-            <FormControlLabelText className="text-gray-900">
+            <FormControlLabelText className="text-typography-black">
               First Name
             </FormControlLabelText>
           </FormControlLabel>
@@ -60,16 +60,16 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
           <FormControlError>
             <FormControlErrorIcon
               as={AlertCircleIcon}
-              className="text-red-500"
+              className="text-error-500"
             />
-            <FormControlErrorText className="text-red-500">
+            <FormControlErrorText className="text-error-500">
               {errors.firstName?.message}
             </FormControlErrorText>
           </FormControlError>
         </FormControl>
         <FormControl size="md" isInvalid={!!errors.lastName}>
           <FormControlLabel>
-            <FormControlLabelText className="text-gray-900">
+            <FormControlLabelText className="text-typography-black">
               Last Name
             </FormControlLabelText>
           </FormControlLabel>
@@ -90,9 +90,9 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
           <FormControlError>
             <FormControlErrorIcon
               as={AlertCircleIcon}
-              className="text-red-500"
+              className="text-error-500"
             />
-            <FormControlErrorText className="text-red-500">
+            <FormControlErrorText className="text-error-500">
               {errors.lastName?.message}
             </FormControlErrorText>
           </FormControlError>
@@ -100,7 +100,7 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
 
         <FormControl size="md" isInvalid={!!errors.email}>
           <FormControlLabel>
-            <FormControlLabelText className="text-gray-900">
+            <FormControlLabelText className="text-typography-black">
               Email
             </FormControlLabelText>
           </FormControlLabel>
@@ -121,9 +121,9 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
           <FormControlError>
             <FormControlErrorIcon
               as={AlertCircleIcon}
-              className="text-red-500"
+              className="text-error-500"
             />
-            <FormControlErrorText className="text-red-500">
+            <FormControlErrorText className="text-error-500">
               {errors.email?.message}
             </FormControlErrorText>
           </FormControlError>
@@ -131,7 +131,7 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
 
         <FormControl size="md" isInvalid={!!errors.password}>
           <FormControlLabel>
-            <FormControlLabelText className="text-gray-900">
+            <FormControlLabelText className="text-typography-black">
               Password
             </FormControlLabelText>
           </FormControlLabel>
@@ -158,9 +158,9 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
           <FormControlError>
             <FormControlErrorIcon
               as={AlertCircleIcon}
-              className="text-red-500"
+              className="text-error-500"
             />
-            <FormControlErrorText className="text-red-500">
+            <FormControlErrorText className="text-error-500">
               {errors.password?.message}
             </FormControlErrorText>
           </FormControlError>
@@ -168,7 +168,7 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
 
         <FormControl size="md" isInvalid={!!errors.confirmPassword}>
           <FormControlLabel>
-            <FormControlLabelText className="text-gray-900">
+            <FormControlLabelText className="text-typography-black">
               Confirm Password
             </FormControlLabelText>
           </FormControlLabel>
@@ -195,16 +195,16 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
           <FormControlError>
             <FormControlErrorIcon
               as={AlertCircleIcon}
-              className="text-red-500"
+              className="text-error-500"
             />
-            <FormControlErrorText className="text-red-500">
+            <FormControlErrorText className="text-error-500">
               {errors.confirmPassword?.message}
             </FormControlErrorText>
           </FormControlError>
         </FormControl>
 
         <Button
-          className="self-center bg-yellow-400 mt-4 min-w-[1/2]"
+          className="self-center bg-primary-500 mt-4 min-w-[1/2]"
           size="md"
           variant="outline"
           onPress={onSubmit}
@@ -214,14 +214,14 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
           </ButtonText>
         </Button>
       </VStack>
-      <Divider className="my-10" />
+      <Divider className="bg-primary-500 my-10" />
       <VStack className="items-center gap-4">
         <Box>
-          <Text className="text-gray-700">Already have an account?</Text>
+          <Text className="text-typography-700">Already have an account?</Text>
         </Box>
         <Button variant="outline">
           <Link href="/(auth)/login">
-            <Text className="text-gray-700">Login</Text>
+            <Text className="text-typography-700">Login</Text>
           </Link>
         </Button>
       </VStack>

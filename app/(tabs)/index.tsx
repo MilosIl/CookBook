@@ -52,7 +52,7 @@ const HomeScreen = () => {
   if (isLoading) {
     return (
       <SafeAreaView
-        className={`flex-1 justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}
+        className={`flex-1 justify-center items-center ${isDark ? 'bg-background-dark' : 'bg-background-light'}`}
       >
         <Spinner size="large" />
       </SafeAreaView>
@@ -62,21 +62,23 @@ const HomeScreen = () => {
   if (error) {
     return (
       <SafeAreaView
-        className={`w-full flex-1 justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}
+        className={`w-full flex-1 justify-center items-center ${isDark ? 'bg-background-dark' : 'bg-background-light'}`}
       >
-        <Text className="text-red-500">Error loading recipes</Text>
+        <Text className="text-error-500">Error loading recipes</Text>
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView
-      className={`flex-1 w-full ${isDark ? 'bg-gray-900' : 'bg-white'}`}
+      className={`flex-1 w-full ${isDark ? 'bg-background-dark' : 'bg-background-light'}`}
     >
       <RecipeList
         recipes={filteredRecipes}
         ListHeaderComponent={
-          <View className={isDark ? 'bg-gray-900' : 'bg-white'}>
+          <View
+            className={isDark ? 'bg-background-dark' : 'bg-background-light'}
+          >
             <DailyRecipe />
             <TopLikedRecipes />
             <RecipeFilters

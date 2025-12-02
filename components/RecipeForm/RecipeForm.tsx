@@ -75,16 +75,16 @@ const RecipeForm = ({
                   onChangeText={onChange}
                   onBlur={onBlur}
                   variant="underlined"
-                  className="bg-orange-100 my-1"
+                  className="bg-primary-100 my-1"
                 />
               )}
             />
             <FormControlError>
               <FormControlErrorIcon
                 as={AlertCircleIcon}
-                className="text-red-500"
+                className="text-error-500"
               />
-              <FormControlErrorText className="text-red-500">
+              <FormControlErrorText className="text-error-500">
                 {errors.name?.message}
               </FormControlErrorText>
             </FormControlError>
@@ -104,7 +104,7 @@ const RecipeForm = ({
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    className="bg-orange-100"
+                    className="bg-primary-100"
                   />
                 </Textarea>
               )}
@@ -112,9 +112,9 @@ const RecipeForm = ({
             <FormControlError>
               <FormControlErrorIcon
                 as={AlertCircleIcon}
-                className="text-red-500"
+                className="text-error-500"
               />
-              <FormControlErrorText className="text-red-500">
+              <FormControlErrorText className="text-error-500">
                 {errors.description?.message}
               </FormControlErrorText>
             </FormControlError>
@@ -134,16 +134,16 @@ const RecipeForm = ({
                   onChangeText={onChange}
                   onBlur={onBlur}
                   variant="underlined"
-                  className="bg-orange-100 my-1"
+                  className="bg-primary-100 my-1"
                 />
               )}
             />
             <FormControlError>
               <FormControlErrorIcon
                 as={AlertCircleIcon}
-                className="text-red-500"
+                className="text-error-500"
               />
-              <FormControlErrorText className="text-red-500">
+              <FormControlErrorText className="text-error-500">
                 {errors.image?.message}
               </FormControlErrorText>
             </FormControlError>
@@ -161,7 +161,7 @@ const RecipeForm = ({
                   <SelectTrigger variant="outline" size="md" className="my-1">
                     <SelectInput
                       placeholder="Select type"
-                      className="bg-red-100"
+                      className="bg-backgroundAlt"
                     />
                     <SelectIcon className="mr-3 ml-auto" as={ChevronDownIcon} />
                   </SelectTrigger>
@@ -182,9 +182,9 @@ const RecipeForm = ({
             <FormControlError>
               <FormControlErrorIcon
                 as={AlertCircleIcon}
-                className="text-red-500"
+                className="text-error-500"
               />
-              <FormControlErrorText className="text-red-500">
+              <FormControlErrorText className="text-error-500">
                 {errors.type?.message}
               </FormControlErrorText>
             </FormControlError>
@@ -225,7 +225,7 @@ const RecipeForm = ({
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    className="bg-orange-100"
+                    className="bg-primary-100"
                     multiline
                     numberOfLines={6}
                   />
@@ -235,9 +235,9 @@ const RecipeForm = ({
             <FormControlError>
               <FormControlErrorIcon
                 as={AlertCircleIcon}
-                className="text-red-500"
+                className="text-error-500"
               />
-              <FormControlErrorText className="text-red-500">
+              <FormControlErrorText className="text-error-500">
                 {errors.ingredients?.message}
               </FormControlErrorText>
             </FormControlError>
@@ -257,7 +257,7 @@ const RecipeForm = ({
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    className="bg-orange-100"
+                    className="bg-primary-100"
                     multiline
                     numberOfLines={8}
                   />
@@ -267,16 +267,16 @@ const RecipeForm = ({
             <FormControlError>
               <FormControlErrorIcon
                 as={AlertCircleIcon}
-                className="text-red-500"
+                className="text-error-500"
               />
-              <FormControlErrorText className="text-red-500">
+              <FormControlErrorText className="text-error-500">
                 {errors.preparation?.message}
               </FormControlErrorText>
             </FormControlError>
           </FormControl>
 
           <Button
-            className="self-center bg-orange-500 mt-4 w-full"
+            className="self-center bg-primary-500 mt-4 w-full"
             size="lg"
             onPress={onSubmit}
             isDisabled={isSubmitting}

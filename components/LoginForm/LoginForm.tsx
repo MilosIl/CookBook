@@ -56,9 +56,9 @@ const LoginForm = ({ control, errors, onSubmit }: LoginFormProps) => {
           <FormControlError>
             <FormControlErrorIcon
               as={AlertCircleIcon}
-              className="text-red-500"
+              className="text-error-500"
             />
-            <FormControlErrorText className="text-red-500">
+            <FormControlErrorText className="text-error-500">
               {errors.email?.message}
             </FormControlErrorText>
           </FormControlError>
@@ -90,15 +90,15 @@ const LoginForm = ({ control, errors, onSubmit }: LoginFormProps) => {
           <FormControlError>
             <FormControlErrorIcon
               as={AlertCircleIcon}
-              className="text-red-500"
+              className="text-error-500"
             />
-            <FormControlErrorText className="text-red-500">
+            <FormControlErrorText className="text-error-500">
               {errors.password?.message}
             </FormControlErrorText>
           </FormControlError>
         </FormControl>
         <Button
-          className="self-center bg-yellow-400 mt-4 rounded-md min-w-[1/2]"
+          className="self-center bg-primary-500 mt-4 rounded-md min-w-[1/2]"
           size="md"
           variant="solid"
           onPress={onSubmit}
@@ -106,14 +106,14 @@ const LoginForm = ({ control, errors, onSubmit }: LoginFormProps) => {
           <ButtonText className="w-fit font-medium uppercase">Login</ButtonText>
         </Button>
       </VStack>
-      <Divider className="my-10" />
+      <Divider className="bg-primary-500 my-10" />
       <VStack className="items-center gap-4">
         <Box>
-          <Text className="text-gray-700">Dont have an account?</Text>
+          <Text className="text-typography-700">Dont have an account?</Text>
         </Box>
         <Button variant="outline">
           <Link href="/(auth)/signup">
-            <Text className="text-gray-700">Sign up</Text>
+            <Text className="text-typography-700">Sign up</Text>
           </Link>
         </Button>
       </VStack>

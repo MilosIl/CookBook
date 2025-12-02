@@ -16,7 +16,9 @@ const TopLikedRecipes = () => {
 
   if (isLoading) {
     return (
-      <View className={`px-4 mb-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+      <View
+        className={`px-4 mb-6 ${isDark ? 'bg-background-dark' : 'bg-background-light'}`}
+      >
         <View className="gap-4">
           <Skeleton className="rounded-lg h-32" />
           <Skeleton className="rounded-lg h-32" />

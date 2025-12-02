@@ -154,7 +154,7 @@ function RecipeCard({
   return (
     <Box
       id={id}
-      className={`items-center m-2 gap-3  p-4 rounded-lg flex-1   ${isDark ? 'bg-gray-700' : 'bg-orange-400/35'}`}
+      className={`items-center m-2 gap-3  p-4 rounded-lg flex-1   ${isDark ? 'bg-background-800' : 'bg-primary-50'}`}
     >
       <Skeleton
         variant="rounded"
@@ -171,29 +171,31 @@ function RecipeCard({
       </Skeleton>
       <VStack className="flex-1 gap-2 mt-4 w-full">
         <Text
-          className={`font-black text-2xl ${isDark ? 'text-white' : 'text-gray-900'}`}
+          className={`font-black text-2xl ${isDark ? 'text-typography-black' : 'text-typography-white'}`}
         >
           {name}
         </Text>
 
         <Text
-          className={`text-base ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+          className={`text-base ${isDark ? 'text-typography-200' : 'text-typography-700'}`}
         >
           {description}
         </Text>
         <VStack className="flex-row flex-wrap justify-between gap-4">
-          <Text className={isDark ? 'text-gray-300' : 'text-gray-700'}>
+          <Text
+            className={isDark ? 'text-typography-200' : 'text-typography-700'}
+          >
             {vegan ? (
               <MaterialCommunityIcons
                 name="food-apple"
                 size={24}
-                color="green"
+                color="#2EAD4F"
               />
             ) : (
               <MaterialCommunityIcons
                 name="food-drumstick"
                 size={24}
-                color="#B5652A"
+                color="#FF9900"
               />
             )}
           </Text>
@@ -209,9 +211,13 @@ function RecipeCard({
                   <AntDesign
                     name="like"
                     size={24}
-                    color={isLiked ? '#1E90FF' : isDark ? '#9ca3af' : 'black'}
+                    color={isLiked ? '#FF9900' : isDark ? '#999999' : '#4A4A4A'}
                   />
-                  <Text className={isDark ? 'text-gray-300' : 'text-gray-700'}>
+                  <Text
+                    className={
+                      isDark ? 'text-typography-200' : 'text-typography-700'
+                    }
+                  >
                     {displayLikes}
                   </Text>
                 </HStack>
@@ -219,12 +225,12 @@ function RecipeCard({
             </TouchableOpacity>
             <TouchableOpacity onPress={handleFavorite}>
               {isFavorite ? (
-                <FontAwesome name="heart" size={20} color="red" />
+                <FontAwesome name="heart" size={20} color="#FF3B30" />
               ) : (
                 <FontAwesome
                   name="heart-o"
                   size={20}
-                  color={isDark ? '#9ca3af' : 'black'}
+                  color={isDark ? '#999999' : '#4A4A4A'}
                 />
               )}
             </TouchableOpacity>
@@ -233,7 +239,7 @@ function RecipeCard({
                 <MaterialIcons
                   name="share"
                   size={24}
-                  color={isDark ? '#9ca3af' : 'black'}
+                  color={isDark ? '#999999' : '#4A4A4A'}
                 />
               </TouchableOpacity>
             )}
