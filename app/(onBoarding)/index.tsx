@@ -35,7 +35,7 @@ const OnBoardingScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-green-500">
+    <SafeAreaView className="flex-1 bg-orange-300">
       <Onboarding
         onSkip={handleComplete}
         onDone={handleComplete}
@@ -43,19 +43,19 @@ const OnBoardingScreen = () => {
         DotComponent={DotComponent}
         pages={[
           {
-            backgroundColor: 'red',
+            backgroundColor: '#fdba74',
             image: <Image src="uri" alt="image-1" />,
             title: 'Welcome to the CookBook',
             subtitle: 'Your assistant for delicious recipes!',
           },
           {
-            backgroundColor: 'green',
+            backgroundColor: '#fdba74',
             image: <Image src="uri" alt="image-2" />,
             title: 'Discover new recipes',
             subtitle: 'Browse a variety of recipes tailored to your taste!',
           },
           {
-            backgroundColor: '#fff',
+            backgroundColor: '#fdba74',
             image: <Image src="uri" alt="image-3" />,
             title: 'With CookBook you can easily manage your recipes',
             subtitle: 'Add, edit, and delete your favorite recipes on the go!',

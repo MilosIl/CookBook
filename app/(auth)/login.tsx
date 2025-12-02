@@ -1,6 +1,7 @@
 import LoginForm, { LoginFormData } from '@/components/LoginForm/LoginForm';
 import { useAuthStore } from '@/store/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'expo-router';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { z } from 'zod';
@@ -13,6 +14,7 @@ const loginSchema = z.object({
 });
 
 const LoginScreen = () => {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -27,6 +29,7 @@ const LoginScreen = () => {
   const { login } = useAuthStore();
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     login(data.email, data.password);
+    router.push('/(tabs)');
   };
 
   return (

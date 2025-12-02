@@ -1,3 +1,4 @@
+import ThemedInput from '@/components/ThemedInput';
 import { Button, ButtonText } from '@/components/ui/button';
 import {
   FormControl,
@@ -10,7 +11,6 @@ import {
   FormControlLabelText,
 } from '@/components/ui/form-control';
 import { AlertCircleIcon } from '@/components/ui/icon';
-import { Input, InputField } from '@/components/ui/input';
 import { VStack } from '@/components/ui/vstack';
 import { Link } from 'expo-router';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
@@ -32,25 +32,24 @@ type LoginFormProps = {
 
 const LoginForm = ({ control, errors, onSubmit }: LoginFormProps) => {
   return (
-    <View className="mx-auto mt-10 w-4/5">
+    <View className="mx-auto mt-20 w-4/5">
       <VStack>
         <FormControl size="md" isInvalid={!!errors.email}>
           <FormControlLabel>
-            <FormControlLabelText>email</FormControlLabelText>
+            <FormControlLabelText>Email</FormControlLabelText>
           </FormControlLabel>
           <Controller
             control={control}
             name="email"
             render={({ field: { onChange, onBlur, value } }) => (
-              <Input size="md" variant="underlined">
-                <InputField
-                  type="text"
-                  placeholder="email"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
-              </Input>
+              <ThemedInput
+                variant="underlined"
+                size="md"
+                placeholder="email"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+              />
             )}
           />
 
@@ -64,7 +63,7 @@ const LoginForm = ({ control, errors, onSubmit }: LoginFormProps) => {
             </FormControlErrorText>
           </FormControlError>
         </FormControl>
-        <FormControl size="md" isInvalid={!!errors.password}>
+        <FormControl size="md" isInvalid={!!errors.password} className="mt-6">
           <FormControlLabel>
             <FormControlLabelText>Password</FormControlLabelText>
           </FormControlLabel>
@@ -72,15 +71,15 @@ const LoginForm = ({ control, errors, onSubmit }: LoginFormProps) => {
             control={control}
             name="password"
             render={({ field: { onChange, onBlur, value } }) => (
-              <Input size="md" variant="underlined">
-                <InputField
-                  type="password"
-                  placeholder="password"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                />
-              </Input>
+              <ThemedInput
+                variant="underlined"
+                size="md"
+                placeholder="password"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                isPassword
+              />
             )}
           />
           <FormControlHelper>

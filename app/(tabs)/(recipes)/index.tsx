@@ -1,13 +1,11 @@
-import RecipeCard from '@/components/RecipeCard/RecipeCard';
-import { HStack } from '@/components/ui/hstack';
+import RecipeList from '@/components/RecipeList';
 import { Spinner } from '@/components/ui/spinner';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { useFavoriteRecipes } from '@/hooks/useRecipes';
 import { useRecipeStore } from '@/store/recipe';
 import { useResolvedTheme } from '@/store/theme';
-import { Link } from 'expo-router';
-import { FlatList, View } from 'react-native';
+import { View } from 'react-native';
 
 const FavoriteRecipes = () => {
   const { favoriteRecipeIds } = useRecipeStore();
@@ -49,20 +47,7 @@ const FavoriteRecipes = () => {
           {favoriteRecipeIds.length === 1 ? 'recipe' : 'recipes'}
         </Text>
       </VStack>
-
-      <FlatList
-        data={favoriteRecipes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <Link href={`/recipes/${item.id}`} asChild>
-            <HStack className="justify-center">
-              <RecipeCard {...item} />
-            </HStack>
-          </Link>
-        )}
-        contentContainerStyle={{ paddingBottom: 20 }}
-        showsVerticalScrollIndicator={false}
-      />
+      <RecipeList recipes={favoriteRecipes} />
     </View>
   );
 };

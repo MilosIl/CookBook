@@ -1,7 +1,8 @@
 import RecipeForm, { RecipeFormData } from '@/components/RecipeForm/RecipeForm';
-import { useCreateRecipe } from '@/hooks/useRecipes';
 import { useAuthStore } from '@/store/auth';
+import { Recipe } from '@/store/recipe';
 import { zodResolver } from '@hookform/resolvers/zod';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -27,7 +28,6 @@ const recipeSchema = z.object({
 const NewRecipeScreen = () => {
   const router = useRouter();
   const { user } = useAuthStore();
-  const createRecipeMutation = useCreateRecipe();
 
   const {
     control,
@@ -59,7 +59,9 @@ const NewRecipeScreen = () => {
         .map((i) => i.trim())
         .filter((i) => i.length > 0);
 
-      await createRecipeMutation.mutateAsync({
+      // Create recipe object
+      const newRecipe: Recipe = {
+        id: `local_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         name: data.name,
         description: data.description,
         image: data.image,
@@ -69,17 +71,31 @@ const NewRecipeScreen = () => {
         preparation: data.preparation,
         user_id: user.id,
         likes: 0,
-      });
+        is_public: false,
+        created_at: new Date().toISOString(),
+      };
 
-      Alert.alert('Success', 'Recipe created successfully!', [
-        {
-          text: 'OK',
-          onPress: () => {
-            reset();
-            router.back();
+      // Store recipe in AsyncStorage
+      const storedRecipesJson = await AsyncStorage.getItem('my_recipes');
+      const storedRecipes: Recipe[] = storedRecipesJson
+        ? JSON.parse(storedRecipesJson)
+        : [];
+      storedRecipes.push(newRecipe);
+      await AsyncStorage.setItem('my_recipes', JSON.stringify(storedRecipes));
+
+      Alert.alert(
+        'Success',
+        'Recipe saved locally! You can share it later to make it public.',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              reset();
+              router.back();
+            },
           },
-        },
-      ]);
+        ]
+      );
     } catch (error) {
       console.error('Error creating recipe:', error);
       Alert.alert('Error', 'Failed to create recipe. Please try again.');
@@ -92,7 +108,7 @@ const NewRecipeScreen = () => {
         control={control}
         errors={errors}
         onSubmit={handleSubmit(onSubmit)}
-        isSubmitting={createRecipeMutation.isPending}
+        isSubmitting={false}
       />
     </View>
   );

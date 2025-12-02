@@ -1,17 +1,23 @@
+import DailyRecipe from '@/components/DailyRecipe/DailyRecipe';
+import RecipeFilters from '@/components/RecipeFilters';
 import RecipeList from '@/components/RecipeList';
-import RecipeTypeSelect from '@/components/RecipeTypeSelect';
 import TopLikedRecipes from '@/components/TopLikedRecipes';
-import VeganFilter from '@/components/VeganFilter';
 import { Spinner } from '@/components/ui/spinner';
 import { useRecipes } from '@/hooks/useRecipes';
 import { useRecipeStore } from '@/store/recipe';
 import { useResolvedTheme } from '@/store/theme';
 import { useMemo } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HomeScreen = () => {
-  const { selectedType, setSelectedType, showVeganOnly } = useRecipeStore();
+  const {
+    selectedType,
+    setSelectedType,
+    showVeganOnly,
+    searchQuery,
+    setSearchQuery,
+  } = useRecipeStore();
   const theme = useResolvedTheme();
   const isDark = theme === 'dark';
   const {
@@ -20,12 +26,28 @@ const HomeScreen = () => {
     error,
   } = useRecipes(selectedType === 'all' ? undefined : selectedType);
 
-  // Filter recipes based on vegan filter
   const filteredRecipes = useMemo(() => {
     if (!recipes) return recipes;
-    if (!showVeganOnly) return recipes;
-    return recipes.filter((recipe) => recipe.vegan);
-  }, [recipes, showVeganOnly]);
+
+    let filtered = recipes;
+
+    if (showVeganOnly) {
+      filtered = filtered.filter((recipe) => recipe.vegan);
+    }
+
+    if (searchQuery && searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+
+      filtered = filtered.filter((recipe) => {
+        const matches = recipe.name.toLowerCase().includes(query);
+        if (matches) {
+        }
+        return matches;
+      });
+    }
+
+    return filtered;
+  }, [recipes, showVeganOnly, searchQuery]);
 
   if (isLoading) {
     return (
@@ -51,19 +73,21 @@ const HomeScreen = () => {
     <SafeAreaView
       className={`flex-1 w-full ${isDark ? 'bg-gray-900' : 'bg-white'}`}
     >
-      <ScrollView>
-        <View className={isDark ? 'bg-gray-900' : 'bg-white'}>
-          <TopLikedRecipes />
-          <View className="flex-row items-center gap-3 mb-4 px-4">
-            <RecipeTypeSelect
+      <RecipeList
+        recipes={filteredRecipes}
+        ListHeaderComponent={
+          <View className={isDark ? 'bg-gray-900' : 'bg-white'}>
+            <DailyRecipe />
+            <TopLikedRecipes />
+            <RecipeFilters
+              searchQuery={searchQuery}
               selectedType={selectedType}
+              onSearchChange={setSearchQuery}
               onTypeChange={setSelectedType}
             />
-            <VeganFilter />
           </View>
-        </View>
-        <RecipeList recipes={filteredRecipes} />
-      </ScrollView>
+        }
+      />
     </SafeAreaView>
   );
 };

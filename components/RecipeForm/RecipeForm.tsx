@@ -1,3 +1,4 @@
+import ThemedInput from '@/components/ThemedInput';
 import { Button, ButtonText } from '@/components/ui/button';
 import {
   FormControl,
@@ -8,7 +9,6 @@ import {
   FormControlLabelText,
 } from '@/components/ui/form-control';
 import { AlertCircleIcon } from '@/components/ui/icon';
-import { Input, InputField } from '@/components/ui/input';
 import {
   Select,
   SelectBackdrop,
@@ -69,16 +69,14 @@ const RecipeForm = ({
               control={control}
               name="name"
               render={({ field: { onChange, onBlur, value } }) => (
-                <Input className="my-1" size="md">
-                  <InputField
-                    type="text"
-                    placeholder="Enter recipe name"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    className="bg-green-100"
-                  />
-                </Input>
+                <ThemedInput
+                  placeholder="Enter recipe name"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  variant="underlined"
+                  className="bg-orange-100 my-1"
+                />
               )}
             />
             <FormControlError>
@@ -106,7 +104,7 @@ const RecipeForm = ({
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    className="bg-green-100"
+                    className="bg-orange-100"
                   />
                 </Textarea>
               )}
@@ -130,16 +128,14 @@ const RecipeForm = ({
               control={control}
               name="image"
               render={({ field: { onChange, onBlur, value } }) => (
-                <Input className="my-1" size="md">
-                  <InputField
-                    type="text"
-                    placeholder="https://example.com/image.jpg"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    className="bg-green-100"
-                  />
-                </Input>
+                <ThemedInput
+                  placeholder="https://example.com/image.jpg"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  variant="underlined"
+                  className="bg-orange-100 my-1"
+                />
               )}
             />
             <FormControlError>
@@ -165,9 +161,9 @@ const RecipeForm = ({
                   <SelectTrigger variant="outline" size="md" className="my-1">
                     <SelectInput
                       placeholder="Select type"
-                      className="bg-green-100"
+                      className="bg-red-100"
                     />
-                    <SelectIcon className="mr-3" as={ChevronDownIcon} />
+                    <SelectIcon className="mr-3 ml-auto" as={ChevronDownIcon} />
                   </SelectTrigger>
                   <SelectPortal>
                     <SelectBackdrop />
@@ -201,6 +197,7 @@ const RecipeForm = ({
               render={({ field: { onChange, value } }) => (
                 <Checkbox
                   size="md"
+                  value="vegan"
                   isChecked={value}
                   onChange={onChange}
                   aria-label="Vegan"
@@ -228,7 +225,7 @@ const RecipeForm = ({
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    className="bg-green-100"
+                    className="bg-orange-100"
                     multiline
                     numberOfLines={6}
                   />
@@ -260,7 +257,7 @@ const RecipeForm = ({
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    className="bg-green-100"
+                    className="bg-orange-100"
                     multiline
                     numberOfLines={8}
                   />

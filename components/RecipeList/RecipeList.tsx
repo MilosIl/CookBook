@@ -5,9 +5,10 @@ import { FlatList, Text, View } from 'react-native';
 
 interface RecipeListProps {
   recipes: Recipe[] | undefined;
+  ListHeaderComponent?: React.ReactElement;
 }
 
-const RecipeList = ({ recipes }: RecipeListProps) => {
+const RecipeList = ({ recipes, ListHeaderComponent }: RecipeListProps) => {
   const theme = useResolvedTheme();
   const isDark = theme === 'dark';
 
@@ -23,11 +24,7 @@ const RecipeList = ({ recipes }: RecipeListProps) => {
 
   const RecipeItem = ({ item }: { item: Recipe }) => {
     return (
-      <Link
-        href={`/recipes/${item.id}`}
-        key={item.id}
-        className="place-self-center mx-auto my-4"
-      >
+      <Link href={`/recipes/${item.id}`} key={item.id}>
         <RecipeCard {...item} />
       </Link>
     );
@@ -38,6 +35,7 @@ const RecipeList = ({ recipes }: RecipeListProps) => {
       data={recipes}
       renderItem={RecipeItem}
       ListEmptyComponent={NoRecipes}
+      ListHeaderComponent={ListHeaderComponent}
       keyExtractor={(item: Recipe) => item.id}
       className={isDark ? 'bg-gray-900' : 'bg-white'}
       contentContainerStyle={{

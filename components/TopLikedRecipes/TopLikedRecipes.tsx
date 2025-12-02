@@ -1,10 +1,9 @@
 import RecipeCard, { Recipe } from '@/components/RecipeCard/RecipeCard';
-import { Heading } from '@/components/ui/heading';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTopLikedRecipes } from '@/hooks/useRecipes';
 import { useResolvedTheme } from '@/store/theme';
 import { Link } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 
 const NUMBER_OF_TOP_RECIPES = 3;
 
@@ -18,12 +17,6 @@ const TopLikedRecipes = () => {
   if (isLoading) {
     return (
       <View className={`px-4 mb-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
-        <Heading
-          size="xl"
-          className={`mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}
-        >
-          🔥 Top Liked Recipes
-        </Heading>
         <View className="gap-4">
           <Skeleton className="rounded-lg h-32" />
           <Skeleton className="rounded-lg h-32" />
@@ -39,10 +32,17 @@ const TopLikedRecipes = () => {
 
   return (
     <View className={`px-4 mb-6 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
+      <Text
+        className={`my-4 text-xl font-semibold ${
+          isDark ? 'text-white' : 'text-gray-900'
+        }`}
+      >
+        Top Liked Recipes
+      </Text>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ gap: 8 }}
+        contentContainerStyle={{ gap: 20 }}
       >
         {topRecipes.map((recipe: Recipe) => (
           <Link href={`/recipes/${recipe.id}`} key={recipe.id}>
