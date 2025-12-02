@@ -24,8 +24,9 @@ import {
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import { VStack } from '@/components/ui/vstack';
 import { ChevronDownIcon } from 'lucide-react-native';
+import { useState } from 'react';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
-import { ScrollView, View } from 'react-native';
+import { Image, ScrollView, View } from 'react-native';
 import {
   Checkbox,
   CheckboxIcon,
@@ -57,6 +58,8 @@ const RecipeForm = ({
   onSubmit,
   isSubmitting,
 }: RecipeFormProps) => {
+  const [imagePreviewError, setImagePreviewError] = useState(false);
+
   return (
     <ScrollView className="flex-1 bg-white">
       <View className="mx-auto mt-6 pb-10 w-11/12">
@@ -128,14 +131,33 @@ const RecipeForm = ({
               control={control}
               name="image"
               render={({ field: { onChange, onBlur, value } }) => (
-                <ThemedInput
-                  placeholder="https://example.com/image.jpg"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  variant="underlined"
-                  className="bg-primary-100 my-1"
-                />
+                <>
+                  <ThemedInput
+                    placeholder="https://example.com/image.jpg"
+                    value={value}
+                    onChangeText={(text) => {
+                      onChange(text);
+                      setImagePreviewError(false);
+                    }}
+                    onBlur={onBlur}
+                    variant="underlined"
+                    className="bg-primary-100 my-1"
+                  />
+                  {value && value.trim() && (
+                    <View className="mt-2 rounded-lg overflow-hidden">
+                      <Image
+                        source={
+                          imagePreviewError
+                            ? require('@/assets/images/food.png')
+                            : { uri: value }
+                        }
+                        style={{ width: '100%', height: 150 }}
+                        resizeMode="cover"
+                        onError={() => setImagePreviewError(true)}
+                      />
+                    </View>
+                  )}
+                </>
               )}
             />
             <FormControlError>

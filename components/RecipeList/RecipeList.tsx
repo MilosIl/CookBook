@@ -1,16 +1,28 @@
-import RecipeCard, { Recipe } from '@/components/RecipeCard/RecipeCard';
-import { useResolvedTheme } from '@/store/theme';
+import RecipeCard, { Recipe } from '@/components/RecipeCard/';
+import { useTheme } from '@/store/theme';
 import { Link } from 'expo-router';
 import { FlatList, Text, View } from 'react-native';
 
 interface RecipeListProps {
   recipes: Recipe[] | undefined;
   ListHeaderComponent?: React.ReactElement;
+  showHidden?: boolean;
+  onRefresh?: () => void;
+  refreshing?: boolean;
 }
 
-const RecipeList = ({ recipes, ListHeaderComponent }: RecipeListProps) => {
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
+const RecipeList = ({
+  recipes,
+  ListHeaderComponent,
+  showHidden = false,
+  onRefresh,
+  refreshing = false,
+}: RecipeListProps) => {
+  const { isDark } = useTheme();
+
+  const visibleRecipes = showHidden
+    ? recipes
+    : recipes?.filter((recipe) => recipe.is_public !== false);
 
   const NoRecipes = () => {
     return (
@@ -27,14 +39,14 @@ const RecipeList = ({ recipes, ListHeaderComponent }: RecipeListProps) => {
   const RecipeItem = ({ item }: { item: Recipe }) => {
     return (
       <Link href={`/recipes/${item.id}`} key={item.id}>
-        <RecipeCard {...item} />
+        <RecipeCard recipe={item} />
       </Link>
     );
   };
 
   return (
     <FlatList
-      data={recipes}
+      data={visibleRecipes}
       renderItem={RecipeItem}
       ListEmptyComponent={NoRecipes}
       ListHeaderComponent={ListHeaderComponent}
@@ -43,6 +55,8 @@ const RecipeList = ({ recipes, ListHeaderComponent }: RecipeListProps) => {
       contentContainerStyle={{
         backgroundColor: isDark ? '#121212' : '#FFFFFF',
       }}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
     />
   );
 };

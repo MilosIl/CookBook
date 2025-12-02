@@ -1,35 +1,23 @@
 import RecipeList from '@/components/RecipeList';
-import { useUserRecipes } from '@/hooks/useRecipes';
-import useAuthStore from '@/store/auth';
-import { Recipe } from '@/store/recipe';
-import { useResolvedTheme } from '@/store/theme';
+import { useLocalRecipes, useUserRecipes } from '@/hooks/useRecipes';
+import { useAuthStore } from '@/store/auth';
+import { useTheme } from '@/store/theme';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useRouter } from 'expo-router';
+import { useMemo } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const RecipesScreen = () => {
   const router = useRouter();
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
-  const [myRecipes, setMyRecipes] = useState<Recipe[]>([]);
+  const { isDark } = useTheme();
   const { user } = useAuthStore();
-  const { data: dbRecipes } = useUserRecipes(user?.id);
+  const { data: dbRecipes = [] } = useUserRecipes(user?.id);
+  const { data: localRecipes = [] } = useLocalRecipes();
 
-  const loadRecipes = useCallback(async () => {
-    const stored = await AsyncStorage.getItem('my_recipes');
-    const localRecipes = stored ? JSON.parse(stored) : [];
-
-    const allRecipes = [...localRecipes, ...(dbRecipes || [])];
-    setMyRecipes(allRecipes);
-  }, [dbRecipes]);
-
-  useFocusEffect(
-    useCallback(() => {
-      loadRecipes();
-    }, [loadRecipes])
+  const myRecipes = useMemo(
+    () => [...localRecipes, ...dbRecipes],
+    [localRecipes, dbRecipes]
   );
 
   return (
@@ -43,11 +31,11 @@ const RecipesScreen = () => {
           </Text>
         </View>
       ) : (
-        <RecipeList recipes={myRecipes} />
+        <RecipeList recipes={myRecipes} showHidden={true} />
       )}
       <TouchableOpacity
         onPress={() => router.push('/recipes/new')}
-        className="right-6 bottom-6 absolute justify-center items-center bg-orange-500 active:bg-orange-600 shadow-lg rounded-full w-16 h-16"
+        className="bottom-6 left-6 absolute justify-center items-center bg-orange-500 active:bg-orange-600 shadow-lg rounded-full w-16 h-16"
       >
         <AntDesign name="plus" size={28} color="white" />
       </TouchableOpacity>

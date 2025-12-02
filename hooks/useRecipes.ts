@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { Recipe } from '@/store/recipe';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const recipeKeys = {
@@ -9,6 +10,7 @@ export const recipeKeys = {
   details: () => [...recipeKeys.all, 'detail'] as const,
   detail: (id: string) => [...recipeKeys.details(), id] as const,
   userRecipes: (userId: string) => [...recipeKeys.all, 'user', userId] as const,
+  localRecipes: () => [...recipeKeys.all, 'local'] as const,
   favoriteRecipes: (ids: string[]) =>
     [...recipeKeys.all, 'favorites', ids] as const,
   topLiked: () => [...recipeKeys.all, 'top-liked'] as const,
@@ -66,6 +68,21 @@ export function useUserRecipes(userId: string | undefined) {
       return data as Recipe[];
     },
     enabled: !!userId,
+  });
+}
+
+export function useLocalRecipes() {
+  return useQuery({
+    queryKey: recipeKeys.localRecipes(),
+    queryFn: async () => {
+      try {
+        const stored = await AsyncStorage.getItem('recipes');
+        return stored ? (JSON.parse(stored) as Recipe[]) : [];
+      } catch (error) {
+        console.error('Error loading local recipes:', error);
+        return [];
+      }
+    },
   });
 }
 
@@ -194,9 +211,11 @@ export function useShareRecipe() {
       if (error) throw error;
       return data as Recipe;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: recipeKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: recipeKeys.topLiked() });
+    onSuccess: async () => {
+      // Use refetchQueries to immediately refetch active queries
+      await queryClient.refetchQueries({ queryKey: recipeKeys.lists() });
+      await queryClient.refetchQueries({ queryKey: recipeKeys.topLiked() });
+      await queryClient.refetchQueries({ queryKey: recipeKeys.localRecipes() });
     },
   });
 }

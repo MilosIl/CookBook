@@ -5,7 +5,7 @@ import TopLikedRecipes from '@/components/TopLikedRecipes';
 import { Spinner } from '@/components/ui/spinner';
 import { useRecipes } from '@/hooks/useRecipes';
 import { useRecipeStore } from '@/store/recipe';
-import { useResolvedTheme } from '@/store/theme';
+import { useTheme } from '@/store/theme';
 import { useMemo } from 'react';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,12 +18,13 @@ const HomeScreen = () => {
     searchQuery,
     setSearchQuery,
   } = useRecipeStore();
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
+  const { isDark } = useTheme();
   const {
     data: recipes,
     isLoading,
     error,
+    refetch,
+    isRefetching,
   } = useRecipes(selectedType === 'all' ? undefined : selectedType);
 
   const filteredRecipes = useMemo(() => {
@@ -37,13 +38,9 @@ const HomeScreen = () => {
 
     if (searchQuery && searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
-
-      filtered = filtered.filter((recipe) => {
-        const matches = recipe.name.toLowerCase().includes(query);
-        if (matches) {
-        }
-        return matches;
-      });
+      filtered = filtered.filter((recipe) =>
+        recipe.name.toLowerCase().includes(query)
+      );
     }
 
     return filtered;
@@ -75,6 +72,8 @@ const HomeScreen = () => {
     >
       <RecipeList
         recipes={filteredRecipes}
+        onRefresh={refetch}
+        refreshing={isRefetching}
         ListHeaderComponent={
           <View
             className={isDark ? 'bg-background-dark' : 'bg-background-light'}

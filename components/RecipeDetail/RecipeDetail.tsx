@@ -1,4 +1,4 @@
-import { typeBadgeColors } from '@/components/RecipeCard/RecipeCard';
+import { typeBadgeColors } from '@/components/RecipeCard/';
 import { Box } from '@/components/ui/box';
 import { HStack } from '@/components/ui/hstack';
 import { Image } from '@/components/ui/image';
@@ -8,6 +8,7 @@ import { Recipe } from '@/store/recipe';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useState } from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
 
 type RecipeDetailProps = {
@@ -21,12 +22,19 @@ const RecipeDetail = ({
   isFavorite,
   onToggleFavorite,
 }: RecipeDetailProps) => {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <ScrollView className="flex-1">
       <Image
         className="w-full h-64"
-        source={{ uri: recipe.image }}
+        source={
+          imageError || !recipe.image
+            ? require('@/assets/images/food.png')
+            : { uri: recipe.image }
+        }
         alt={recipe.name}
+        onError={() => setImageError(true)}
       />
 
       <VStack className="gap-4 p-4">
