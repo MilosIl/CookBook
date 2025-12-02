@@ -29,11 +29,14 @@ type RecipeClientState = {
   searchQuery: string;
   LikedIds: string[];
   favoriteRecipeIds: string[];
+  showVeganOnly: boolean;
 };
 
 type RecipeClientActions = {
   setSelectedType: (type: 'all' | 'breakfast' | 'lunch' | 'dinner') => void;
   setSearchQuery: (query: string) => void;
+  toggleVeganFilter: () => void;
+  setShowVeganOnly: (value: boolean) => void;
 
   addLike: (recipeId: string) => void;
   removeLike: (recipeId: string) => void;
@@ -52,9 +55,13 @@ export const useRecipeStore = create<RecipeClientStore>()(
       searchQuery: '',
       LikedIds: [],
       favoriteRecipeIds: [],
+      showVeganOnly: false,
 
       setSelectedType: (type) => set({ selectedType: type }),
       setSearchQuery: (query) => set({ searchQuery: query }),
+      toggleVeganFilter: () =>
+        set((state) => ({ showVeganOnly: !state.showVeganOnly })),
+      setShowVeganOnly: (value) => set({ showVeganOnly: value }),
 
       addLike: (recipeId) =>
         set((state) => ({

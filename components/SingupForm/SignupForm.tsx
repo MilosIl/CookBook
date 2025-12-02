@@ -39,7 +39,9 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
       <VStack>
         <FormControl size="md" isInvalid={!!errors.firstName}>
           <FormControlLabel>
-            <FormControlLabelText>First Name</FormControlLabelText>
+            <FormControlLabelText className="text-gray-900">
+              First Name
+            </FormControlLabelText>
           </FormControlLabel>
           <Controller
             control={control}
@@ -48,11 +50,10 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
               <Input className="my-1" size="md">
                 <InputField
                   type="text"
-                  placeholder="first name"
+                  placeholder="First name"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  className="bg-green-400 text-black"
                 />
               </Input>
             )}
@@ -69,7 +70,9 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
         </FormControl>
         <FormControl size="md" isInvalid={!!errors.lastName}>
           <FormControlLabel>
-            <FormControlLabelText>Last Name</FormControlLabelText>
+            <FormControlLabelText className="text-gray-900">
+              Last Name
+            </FormControlLabelText>
           </FormControlLabel>
           <Controller
             control={control}
@@ -82,7 +85,6 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  className="bg-green-400 text-black"
                 />
               </Input>
             )}
@@ -100,7 +102,9 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
 
         <FormControl size="md" isInvalid={!!errors.email}>
           <FormControlLabel>
-            <FormControlLabelText>Email</FormControlLabelText>
+            <FormControlLabelText className="text-gray-900">
+              Email
+            </FormControlLabelText>
           </FormControlLabel>
           <Controller
             control={control}
@@ -109,11 +113,10 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
               <Input className="my-1" size="md">
                 <InputField
                   type="text"
-                  placeholder="email"
+                  placeholder="Email"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  className="bg-green-400 text-black"
                 />
               </Input>
             )}
@@ -131,7 +134,9 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
 
         <FormControl size="md" isInvalid={!!errors.password}>
           <FormControlLabel>
-            <FormControlLabelText>Password</FormControlLabelText>
+            <FormControlLabelText className="text-gray-900">
+              Password
+            </FormControlLabelText>
           </FormControlLabel>
           <Controller
             control={control}
@@ -140,11 +145,10 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
               <Input className="my-1" size="md">
                 <InputField
                   type="password"
-                  placeholder="password"
+                  placeholder="Password"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  className="bg-green-400 text-black"
                 />
               </Input>
             )}
@@ -167,7 +171,9 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
 
         <FormControl size="md" isInvalid={!!errors.confirmPassword}>
           <FormControlLabel>
-            <FormControlLabelText>Confirm Password</FormControlLabelText>
+            <FormControlLabelText className="text-gray-900">
+              Confirm Password
+            </FormControlLabelText>
           </FormControlLabel>
           <Controller
             control={control}
@@ -176,11 +182,10 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
               <Input className="my-1" size="md">
                 <InputField
                   type="password"
-                  placeholder="confirm password"
+                  placeholder="Confirm Password"
                   value={value}
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  className="bg-green-400 text-black"
                 />
               </Input>
             )}
@@ -202,12 +207,14 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
         </FormControl>
 
         <Button
-          className="self-center bg-primary-400 mt-4 w-1/2"
+          className="self-center bg-yellow-400 mt-4 min-w-[1/2]"
           size="md"
           variant="outline"
           onPress={onSubmit}
         >
-          <ButtonText>Sign Up</ButtonText>
+          <ButtonText className="font-medium text-black uppercase">
+            Sign Up
+          </ButtonText>
         </Button>
       </VStack>
       <Divider className="my-10" />

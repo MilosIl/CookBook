@@ -1,6 +1,7 @@
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import { useResolvedTheme } from '@/store/theme';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactElement } from 'react';
+import { ReactNode } from 'react';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -10,10 +11,13 @@ const queryClient = new QueryClient({
     },
   },
 });
-const Providers = ({ children }: { children: ReactElement }) => {
+
+const Providers = ({ children }: { children: ReactNode }) => {
+  const theme = useResolvedTheme();
+
   return (
     <QueryClientProvider client={queryClient}>
-      <GluestackUIProvider mode="dark">{children}</GluestackUIProvider>
+      <GluestackUIProvider mode={theme}>{children}</GluestackUIProvider>
     </QueryClientProvider>
   );
 };

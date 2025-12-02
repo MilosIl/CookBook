@@ -3,15 +3,16 @@ import { Image } from '@/components/ui/image';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
+import useAnimation from '@/hooks/useAnimation';
 import { useLikeRecipe, useUnlikeRecipe } from '@/hooks/useRecipes';
 import { useAuthStore } from '@/store/auth';
 import { useRecipeStore } from '@/store/recipe';
+import { useResolvedTheme } from '@/store/theme';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Animated, TouchableOpacity } from 'react-native';
 import { HStack } from '../ui/hstack';
-import useAnimation from '@/hooks/useAnimation';
 
 export type Recipe = {
   id: string;
@@ -44,6 +45,8 @@ function RecipeCard({
   const { favoriteRecipeIds, toggleFavorite, LikedIds, addLike, removeLike } =
     useRecipeStore();
   const { user } = useAuthStore();
+  const theme = useResolvedTheme();
+  const isDark = theme === 'dark';
   const isFavorite = favoriteRecipeIds.includes(id);
 
   const likeMutation = useLikeRecipe();
@@ -84,7 +87,7 @@ function RecipeCard({
   return (
     <Box
       id={id}
-      className="items-center gap-3 bg-orange-100 mt-4 p-4 rounded-lg w-3/4"
+      className={`items-center gap-3 mt-4 p-4 rounded-lg min-w-3/4 flex-1 ${isDark ? 'bg-gray-700' : 'bg-orange-400/35'}`}
     >
       <Skeleton
         variant="rounded"
@@ -101,11 +104,19 @@ function RecipeCard({
       </Skeleton>
       <VStack className="gap-2 mt-4">
         <HStack className="justify-between items-center">
-          <Text className="font-black text-gray-900 text-2xl">{name}</Text>
+          <Text
+            className={`font-black text-2xl ${isDark ? 'text-white' : 'text-gray-900'}`}
+          >
+            {name}
+          </Text>
         </HStack>
-        <Text className="text-gray-700 text-base">{description}</Text>
+        <Text
+          className={`text-base ${isDark ? 'text-gray-300' : 'text-gray-700'}`}
+        >
+          {description}
+        </Text>
         <HStack className="justify-between mb-4">
-          <Text className="p-0 text-gray-700 t">
+          <Text className={isDark ? 'text-gray-300' : 'text-gray-700'}>
             {vegan ? (
               <MaterialCommunityIcons
                 name="food-apple"
@@ -133,19 +144,24 @@ function RecipeCard({
                 <AntDesign
                   name="like"
                   size={24}
-                  color={isLiked ? '#1E90FF' : 'black'}
+                  color={isLiked ? '#1E90FF' : isDark ? '#9ca3af' : 'black'}
                 />
-                <Text className="text-gray-700">{displayLikes}</Text>
+                <Text className={isDark ? 'text-gray-300' : 'text-gray-700'}>
+                  {displayLikes}
+                </Text>
               </HStack>
             </Animated.View>
           </TouchableOpacity>
           <HStack className="items-center gap-1">
-            <Text className="text-gray-700">Favorit:</Text>
             <TouchableOpacity onPress={handleFavorite}>
               {isFavorite ? (
                 <FontAwesome name="heart" size={20} color="red" />
               ) : (
-                <FontAwesome name="heart-o" size={20} color="black" />
+                <FontAwesome
+                  name="heart-o"
+                  size={20}
+                  color={isDark ? '#9ca3af' : 'black'}
+                />
               )}
             </TouchableOpacity>
           </HStack>

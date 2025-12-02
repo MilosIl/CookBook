@@ -13,6 +13,7 @@ export const recipeKeys = {
     [...recipeKeys.all, 'liked', userId] as const,
   favoriteRecipes: (ids: string[]) =>
     [...recipeKeys.all, 'favorites', ids] as const,
+  topLiked: () => [...recipeKeys.all, 'top-liked'] as const,
 };
 
 export function useRecipes(type?: 'breakfast' | 'lunch' | 'dinner') {
@@ -102,6 +103,22 @@ export function useFavoriteRecipes(recipeIds: string[]) {
       return data as Recipe[];
     },
     enabled: recipeIds.length > 0,
+  });
+}
+
+export function useTopLikedRecipes(limit: number = 3) {
+  return useQuery({
+    queryKey: recipeKeys.topLiked(),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('recipes')
+        .select('*')
+        .order('likes', { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data as Recipe[];
+    },
   });
 }
 

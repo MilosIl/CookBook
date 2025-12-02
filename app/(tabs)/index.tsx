@@ -1,51 +1,37 @@
-import RecipeCard, { Recipe } from '@/components/RecipeCard/RecipeCard';
-import {
-  Select,
-  SelectBackdrop,
-  SelectContent,
-  SelectDragIndicator,
-  SelectDragIndicatorWrapper,
-  SelectIcon,
-  SelectInput,
-  SelectItem,
-  SelectPortal,
-  SelectTrigger,
-} from '@/components/ui/select';
+import RecipeList from '@/components/RecipeList';
+import RecipeTypeSelect from '@/components/RecipeTypeSelect';
+import TopLikedRecipes from '@/components/TopLikedRecipes';
+import VeganFilter from '@/components/VeganFilter';
 import { Spinner } from '@/components/ui/spinner';
 import { useRecipes } from '@/hooks/useRecipes';
 import { useRecipeStore } from '@/store/recipe';
-import { Link } from 'expo-router';
-import { ChevronDownIcon } from 'lucide-react-native';
-import { FlatList, Text, View } from 'react-native';
+import { useResolvedTheme } from '@/store/theme';
+import { useMemo } from 'react';
+import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const HomeScreen = () => {
-  const { selectedType, setSelectedType } = useRecipeStore();
+  const { selectedType, setSelectedType, showVeganOnly } = useRecipeStore();
+  const theme = useResolvedTheme();
+  const isDark = theme === 'dark';
   const {
     data: recipes,
     isLoading,
     error,
   } = useRecipes(selectedType === 'all' ? undefined : selectedType);
 
-  const NoRecipes = () => {
-    return (
-      <View>
-        <Text>No recipes found..</Text>
-      </View>
-    );
-  };
-
-  const RecipeItem = ({ item }: { item: Recipe }) => {
-    return (
-      <Link href={`/recipes/${item.id}`} key={item.id} className="my-4">
-        <RecipeCard {...item} />
-      </Link>
-    );
-  };
+  // Filter recipes based on vegan filter
+  const filteredRecipes = useMemo(() => {
+    if (!recipes) return recipes;
+    if (!showVeganOnly) return recipes;
+    return recipes.filter((recipe) => recipe.vegan);
+  }, [recipes, showVeganOnly]);
 
   if (isLoading) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center">
+      <SafeAreaView
+        className={`flex-1 justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}
+      >
         <Spinner size="large" />
       </SafeAreaView>
     );
@@ -53,49 +39,31 @@ const HomeScreen = () => {
 
   if (error) {
     return (
-      <SafeAreaView className="flex-1 justify-center items-center">
+      <SafeAreaView
+        className={`w-full flex-1 justify-center items-center ${isDark ? 'bg-gray-900' : 'bg-white'}`}
+      >
         <Text className="text-red-500">Error loading recipes</Text>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView className="flex-1 mx-auto">
-      <View className="mb-4 px-4">
-        <Text className="mb-2 font-bold text-lg">Filter by type:</Text>
-        <Select
-          selectedValue={selectedType}
-          onValueChange={(value) =>
-            setSelectedType(value as 'all' | 'breakfast' | 'lunch' | 'dinner')
-          }
-        >
-          <SelectTrigger variant="outline" size="md" className="w-full">
-            <SelectInput
-              placeholder="Select recipe type"
-              className="capitalize"
+    <SafeAreaView
+      className={`flex-1 w-full ${isDark ? 'bg-gray-900' : 'bg-white'}`}
+    >
+      <ScrollView>
+        <View className={isDark ? 'bg-gray-900' : 'bg-white'}>
+          <TopLikedRecipes />
+          <View className="flex-row items-center gap-3 mb-4 px-4">
+            <RecipeTypeSelect
+              selectedType={selectedType}
+              onTypeChange={setSelectedType}
             />
-            <SelectIcon className="mr-3" as={ChevronDownIcon} />
-          </SelectTrigger>
-          <SelectPortal>
-            <SelectBackdrop />
-            <SelectContent>
-              <SelectDragIndicatorWrapper>
-                <SelectDragIndicator />
-              </SelectDragIndicatorWrapper>
-              <SelectItem label="All Recipes" value="all" />
-              <SelectItem label="Breakfast" value="breakfast" />
-              <SelectItem label="Lunch" value="lunch" />
-              <SelectItem label="Dinner" value="dinner" />
-            </SelectContent>
-          </SelectPortal>
-        </Select>
-      </View>
-      <FlatList
-        data={recipes}
-        renderItem={RecipeItem}
-        ListEmptyComponent={NoRecipes}
-        keyExtractor={(item: Recipe) => item.id}
-      />
+            <VeganFilter />
+          </View>
+        </View>
+        <RecipeList recipes={filteredRecipes} />
+      </ScrollView>
     </SafeAreaView>
   );
 };

@@ -42,7 +42,7 @@ const LoginForm = ({ control, errors, onSubmit }: LoginFormProps) => {
             control={control}
             name="email"
             render={({ field: { onChange, onBlur, value } }) => (
-              <Input className="bg-green-400 my-1" size="md">
+              <Input size="md" variant="underlined">
                 <InputField
                   type="text"
                   placeholder="email"
@@ -72,7 +72,7 @@ const LoginForm = ({ control, errors, onSubmit }: LoginFormProps) => {
             control={control}
             name="password"
             render={({ field: { onChange, onBlur, value } }) => (
-              <Input className="bg-green-400 my-1" size="md">
+              <Input size="md" variant="underlined">
                 <InputField
                   type="password"
                   placeholder="password"
@@ -99,12 +99,12 @@ const LoginForm = ({ control, errors, onSubmit }: LoginFormProps) => {
           </FormControlError>
         </FormControl>
         <Button
-          className="self-center bg-primary-400 mt-4 w-1/2"
+          className="self-center bg-yellow-400 mt-4 rounded-md min-w-[1/2]"
           size="md"
-          variant="outline"
+          variant="solid"
           onPress={onSubmit}
         >
-          <ButtonText>Login</ButtonText>
+          <ButtonText className="w-fit font-medium uppercase">Login</ButtonText>
         </Button>
       </VStack>
       <Divider className="my-10" />

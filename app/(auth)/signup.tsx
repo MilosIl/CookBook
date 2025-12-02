@@ -2,7 +2,6 @@ import SignupForm, { SignupFormData } from '@/components/SingupForm/SignupForm';
 import { useAuthStore } from '@/store/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Text } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { z } from 'zod';
 
@@ -56,8 +55,7 @@ const SignUpScreen = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
-        <Text>SignUpScreen</Text>
+      <SafeAreaView className="bg-red-50">
         <SignupForm
           control={control}
           errors={errors}
