@@ -18,6 +18,12 @@ import { z } from 'zod';
 const updateProfileSchema = z.object({
   firstName: z.string().min(1, { message: 'First name is required' }),
   lastName: z.string().min(1, { message: 'Last name is required' }),
+  phoneNumber: z
+    .string()
+    .min(1, { message: 'Phone number is required' })
+    .regex(/^\+?[0-9]{10,15}$/, {
+      message: 'Phone number must contain only numbers (10-15 digits)',
+    }),
 });
 
 type UpdateProfileData = z.infer<typeof updateProfileSchema>;
@@ -39,13 +45,14 @@ const SettingsScreen = () => {
     defaultValues: {
       firstName: dbUser?.first_name || '',
       lastName: dbUser?.last_name || '',
+      phoneNumber: dbUser?.phoneNumber || '',
     },
     resolver: zodResolver(updateProfileSchema),
   });
 
   const onSubmit: SubmitHandler<UpdateProfileData> = async (data) => {
     try {
-      await updateDbUser(data.firstName, data.lastName);
+      await updateDbUser(data.firstName, data.lastName, data.phoneNumber);
       setIsModalOpen(false);
       reset(data);
       Alert.alert('Success', 'Your profile has been updated successfully!', [
@@ -68,9 +75,11 @@ const SettingsScreen = () => {
     reset({
       firstName: dbUser?.first_name || '',
       lastName: dbUser?.last_name || '',
+      phoneNumber: dbUser?.phoneNumber || '',
     });
     setIsModalOpen(true);
   };
+
   return (
     <SafeAreaView
       className={`flex-1 ${isDark ? 'bg-background-dark' : 'bg-background-light'}`}
@@ -102,6 +111,11 @@ const SettingsScreen = () => {
                     className={`${isDark ? 'text-typography-400' : 'text-typography-600'} text-sm`}
                   >
                     {dbUser?.email}
+                  </Text>
+                  <Text
+                    className={`${isDark ? 'text-typography-400' : 'text-typography-600'} text-sm`}
+                  >
+                    {dbUser?.phoneNumber || 'No phone number provided'}
                   </Text>
                 </VStack>
               </HStack>
@@ -229,6 +243,32 @@ const SettingsScreen = () => {
                   {errors.lastName && (
                     <Text className="mt-1 text-error-500 text-sm">
                       {errors.lastName.message}
+                    </Text>
+                  )}
+                </View>
+                <View>
+                  <Text
+                    className={`font-medium ${isDark ? 'text-typography-300' : 'text-typography-700'} mb-2`}
+                  >
+                    Phone Number
+                  </Text>
+                  <Controller
+                    control={control}
+                    name="phoneNumber"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <ThemedInput
+                        placeholder="Enter phone number"
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        variant="underlined"
+                        className={errors.phoneNumber ? 'border-error-500' : ''}
+                      />
+                    )}
+                  />
+                  {errors.phoneNumber && (
+                    <Text className="mt-1 text-error-500 text-sm">
+                      {errors.phoneNumber.message}
                     </Text>
                   )}
                 </View>

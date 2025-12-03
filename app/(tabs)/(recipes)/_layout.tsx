@@ -1,9 +1,8 @@
-import { useResolvedTheme } from '@/store/theme';
+import { useTheme } from '@/store/theme';
 import { Drawer } from 'expo-router/drawer';
 
 function RecipesLayout() {
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
+  const { isDark } = useTheme();
 
   return (
     <Drawer

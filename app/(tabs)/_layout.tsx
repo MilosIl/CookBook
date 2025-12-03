@@ -1,12 +1,11 @@
-import { useResolvedTheme } from '@/store/theme';
+import { useTheme } from '@/store/theme';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Foundation from '@expo/vector-icons/Foundation';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import { Tabs } from 'expo-router';
 
 const TabsLayout = () => {
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
+  const { isDark } = useTheme();
 
   return (
     <Tabs

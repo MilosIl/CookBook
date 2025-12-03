@@ -14,6 +14,7 @@ const signupSchema = z
       .string()
       .email({ message: 'Please enter a valid email address.' })
       .min(1, { message: 'Email is required.' }),
+    phoneNumber: z.string().min(10, { message: 'Phone number is required.' }),
     password: z
       .string()
       .min(6, { message: 'Password must be at least 6 characters.' }),
@@ -46,12 +47,14 @@ const SignUpScreen = () => {
     password,
     firstName,
     lastName,
+    phoneNumber,
   }) => {
     await signup({
       email,
       password,
       firstName,
       lastName,
+      phoneNumber,
     });
     router.push('/(tabs)');
   };

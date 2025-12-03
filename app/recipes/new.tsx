@@ -9,7 +9,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Alert, View } from 'react-native';
 import { z } from 'zod';
 
-const recipeSchema = z.object({
+export const recipeSchema = z.object({
   name: z.string().min(1, { message: 'Recipe name is required' }),
   description: z
     .string()
@@ -59,7 +59,6 @@ const NewRecipeScreen = () => {
         .map((i) => i.trim())
         .filter((i) => i.length > 0);
 
-      // Create recipe object
       const newRecipe: Recipe = {
         id: `local_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         name: data.name,
@@ -75,13 +74,12 @@ const NewRecipeScreen = () => {
         created_at: new Date().toISOString(),
       };
 
-      // Store recipe in AsyncStorage
-      const storedRecipesJson = await AsyncStorage.getItem('my_recipes');
+      const storedRecipesJson = await AsyncStorage.getItem('recipes');
       const storedRecipes: Recipe[] = storedRecipesJson
         ? JSON.parse(storedRecipesJson)
         : [];
       storedRecipes.push(newRecipe);
-      await AsyncStorage.setItem('my_recipes', JSON.stringify(storedRecipes));
+      await AsyncStorage.setItem('recipes', JSON.stringify(storedRecipes));
 
       Alert.alert(
         'Success',

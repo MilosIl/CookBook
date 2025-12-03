@@ -25,6 +25,7 @@ export type SignupFormData = {
   email: string;
   password: string;
   confirmPassword: string;
+  phoneNumber: string;
 };
 
 type SignupFormProps = {
@@ -97,7 +98,6 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
             </FormControlErrorText>
           </FormControlError>
         </FormControl>
-
         <FormControl size="md" isInvalid={!!errors.email}>
           <FormControlLabel>
             <FormControlLabelText className="text-typography-black">
@@ -125,6 +125,36 @@ const SignupForm = ({ control, errors, onSubmit }: SignupFormProps) => {
             />
             <FormControlErrorText className="text-error-500">
               {errors.email?.message}
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+        <FormControl size="md" isInvalid={!!errors.phoneNumber}>
+          <FormControlLabel>
+            <FormControlLabelText className="text-typography-black">
+              Phone Number
+            </FormControlLabelText>
+          </FormControlLabel>
+          <Controller
+            control={control}
+            name="phoneNumber"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <ThemedInput
+                placeholder="Phone Number"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                variant="underlined"
+                className="my-1"
+              />
+            )}
+          />
+          <FormControlError>
+            <FormControlErrorIcon
+              as={AlertCircleIcon}
+              className="text-error-500"
+            />
+            <FormControlErrorText className="text-error-500">
+              {errors.phoneNumber?.message}
             </FormControlErrorText>
           </FormControlError>
         </FormControl>

@@ -1,7 +1,7 @@
 import RecipeTypeSelect from '@/components/RecipeTypeSelect';
 import SearchInput from '@/components/ThemedInput';
 import VeganFilter from '@/components/VeganFilter';
-import { useResolvedTheme } from '@/store/theme';
+import { useTheme } from '@/store/theme';
 import { View } from 'react-native';
 
 type RecipeFiltersProps = {
@@ -17,8 +17,7 @@ const RecipeFilters = ({
   onSearchChange,
   onTypeChange,
 }: RecipeFiltersProps) => {
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
+  const { isDark } = useTheme();
 
   return (
     <View className={isDark ? 'bg-gray-900' : 'bg-white'}>

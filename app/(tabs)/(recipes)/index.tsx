@@ -3,17 +3,18 @@ import { Spinner } from '@/components/ui/spinner';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { useFavoriteRecipes } from '@/hooks/useRecipes';
+import { useAuthStore } from '@/store/auth';
 import { useRecipeStore } from '@/store/recipe';
-import { useResolvedTheme } from '@/store/theme';
+import { useTheme } from '@/store/theme';
 import { View } from 'react-native';
 
 const FavoriteRecipes = () => {
-  const { favoriteRecipeIds } = useRecipeStore();
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
+  const { user } = useAuthStore();
+  const { getFavoriteIds } = useRecipeStore();
+  const { isDark } = useTheme();
+  const favoriteRecipeIds = user ? getFavoriteIds(user.id) : [];
   const { data: favoriteRecipes, isLoading } =
     useFavoriteRecipes(favoriteRecipeIds);
-
   if (isLoading) {
     return (
       <View
@@ -43,8 +44,8 @@ const FavoriteRecipes = () => {
     <View className={`flex-1 ${isDark ? 'bg-gray-900' : 'bg-white'}`}>
       <VStack className="p-4">
         <Text className={`mb-4 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-          {favoriteRecipeIds.length}{' '}
-          {favoriteRecipeIds.length === 1 ? 'recipe' : 'recipes'}
+          {favoriteRecipes?.length}{' '}
+          {favoriteRecipes?.length === 1 ? 'recipe' : 'recipes'}
         </Text>
       </VStack>
       <RecipeList recipes={favoriteRecipes} />

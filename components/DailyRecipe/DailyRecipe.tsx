@@ -5,7 +5,7 @@ import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { useRecipes } from '@/hooks/useRecipes';
 import { Recipe } from '@/store/recipe';
-import { useResolvedTheme } from '@/store/theme';
+import { useTheme } from '@/store/theme';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Link } from 'expo-router';
 import { useMemo } from 'react';
@@ -109,8 +109,7 @@ const DailyRecipeCard = ({ recipe, isDark }: DailyRecipeCardProps) => {
 };
 
 const DailyRecipe = () => {
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
+  const { isDark } = useTheme();
   const recipeType = getRecipeTypeByTime();
 
   const { data: recipes, isLoading } = useRecipes(recipeType);
