@@ -29,7 +29,7 @@ type RecipeClientState = {
   selectedType: 'all' | 'breakfast' | 'lunch' | 'dinner';
   searchQuery: string;
   LikedIds: string[];
-  favoriteRecipeIds: string[];
+  favoriteRecipeIds: Record<string, string[]>;
   showVeganOnly: boolean;
 };
 
@@ -38,13 +38,13 @@ type RecipeClientActions = {
   setSearchQuery: (query: string) => void;
   toggleVeganFilter: () => void;
   setShowVeganOnly: (value: boolean) => void;
-
   addLike: (recipeId: string) => void;
   removeLike: (recipeId: string) => void;
   clearLikes: () => void;
-
-  toggleFavorite: (recipeId: string) => void;
-  isFavorite: (recipeId: string) => boolean;
+  toggleFavorite: (recipeId: string, userId: string) => void;
+  isFavorite: (recipeId: string, userId: string) => boolean;
+  getFavoriteIds: (userId: string) => string[];
+  clearUserFavorites: (userId: string) => void;
 };
 
 type RecipeClientStore = RecipeClientState & RecipeClientActions;
@@ -55,7 +55,7 @@ export const useRecipeStore = create<RecipeClientStore>()(
       selectedType: 'all',
       searchQuery: '',
       LikedIds: [],
-      favoriteRecipeIds: [],
+      favoriteRecipeIds: {},
       showVeganOnly: false,
 
       setSelectedType: (type) => set({ selectedType: type }),
@@ -76,16 +76,35 @@ export const useRecipeStore = create<RecipeClientStore>()(
 
       clearLikes: () => set({ LikedIds: [] }),
 
-      toggleFavorite: (recipeId) => {
+      toggleFavorite: (recipeId, userId) => {
         const state = get();
-        const newFavorites = state.favoriteRecipeIds.includes(recipeId)
-          ? state.favoriteRecipeIds.filter((id) => id !== recipeId)
-          : [...state.favoriteRecipeIds, recipeId];
+        const userFavorites = state.favoriteRecipeIds[userId] || [];
+        const newUserFavorites = userFavorites.includes(recipeId)
+          ? userFavorites.filter((id) => id !== recipeId)
+          : [...userFavorites, recipeId];
 
-        set({ favoriteRecipeIds: newFavorites });
+        set({
+          favoriteRecipeIds: {
+            ...state.favoriteRecipeIds,
+            [userId]: newUserFavorites,
+          },
+        });
       },
 
-      isFavorite: (recipeId) => get().favoriteRecipeIds.includes(recipeId),
+      isFavorite: (recipeId, userId) => {
+        const userFavorites = get().favoriteRecipeIds[userId] || [];
+        return userFavorites.includes(recipeId);
+      },
+
+      getFavoriteIds: (userId) => {
+        return get().favoriteRecipeIds[userId] || [];
+      },
+
+      clearUserFavorites: (userId) => {
+        const state = get();
+        const { [userId]: _removed, ...rest } = state.favoriteRecipeIds;
+        set({ favoriteRecipeIds: rest });
+      },
     }),
     {
       name: 'recipe',

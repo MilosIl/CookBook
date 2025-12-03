@@ -2,7 +2,7 @@ import '@/global.css';
 import Providers from '@/providers/Providers';
 import { useAuthStore } from '@/store/auth';
 import useOnboardingStore from '@/store/onboarding';
-import { useResolvedTheme } from '@/store/theme';
+import { useTheme } from '@/store/theme';
 import { checkNetwork } from '@/utils/checkNetwork';
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
@@ -12,7 +12,7 @@ export default function RootLayout() {
   const { checkSession } = useAuthStore();
   const { hasCompletedOnboarding, isLoading, checkOnboardingStatus } =
     useOnboardingStore();
-  const theme = useResolvedTheme();
+  const { isDark } = useTheme();
 
   useEffect(() => {
     checkOnboardingStatus();
@@ -29,8 +29,8 @@ export default function RootLayout() {
       <Providers>
         <>
           <StatusBar
-            barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-            backgroundColor={theme === 'dark' ? '#1f2937' : '#ffffff'}
+            barStyle={isDark ? 'light-content' : 'dark-content'}
+            backgroundColor={isDark ? '#1f2937' : '#ffffff'}
           />
           <Stack>
             <Stack.Screen
@@ -47,8 +47,8 @@ export default function RootLayout() {
     <Providers>
       <>
         <StatusBar
-          barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-          backgroundColor={theme === 'dark' ? '#1f2937' : '#ffffff'}
+          barStyle={isDark ? 'light-content' : 'dark-content'}
+          backgroundColor={isDark ? '#1f2937' : '#ffffff'}
         />
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="(tabs)" />

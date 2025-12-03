@@ -1,12 +1,11 @@
 import { useRecipeStore } from '@/store/recipe';
-import { useResolvedTheme } from '@/store/theme';
+import { useTheme } from '@/store/theme';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Pressable, View } from 'react-native';
 
 const VeganFilter = () => {
   const { showVeganOnly, toggleVeganFilter } = useRecipeStore();
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
+  const { isDark } = useTheme();
 
   return (
     <View className="w-32">

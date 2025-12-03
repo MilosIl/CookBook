@@ -164,11 +164,12 @@ export function useUpdateRecipe() {
         .from('recipes')
         .update(updates)
         .eq('id', id)
-        .select()
-        .single();
+        .select();
 
       if (error) throw error;
-      return data as Recipe;
+      if (!data || data.length === 0)
+        throw new Error('Recipe not found or access denied');
+      return data[0] as Recipe;
     },
     onSuccess: (updatedRecipe) => {
       queryClient.setQueryData(
@@ -209,10 +210,10 @@ export function useShareRecipe() {
         .single();
 
       if (error) throw error;
+      if (!data) throw new Error('Failed to create recipe');
       return data as Recipe;
     },
     onSuccess: async () => {
-      // Use refetchQueries to immediately refetch active queries
       await queryClient.refetchQueries({ queryKey: recipeKeys.lists() });
       await queryClient.refetchQueries({ queryKey: recipeKeys.topLiked() });
       await queryClient.refetchQueries({ queryKey: recipeKeys.localRecipes() });

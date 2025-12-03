@@ -1,15 +1,14 @@
 import RecipeCard, { Recipe } from '@/components/RecipeCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTopLikedRecipes } from '@/hooks/useRecipes';
-import { useResolvedTheme } from '@/store/theme';
+import { useTheme } from '@/store/theme';
 import { Link } from 'expo-router';
 import { ScrollView, Text, View } from 'react-native';
 
 const NUMBER_OF_TOP_RECIPES = 3;
 
 const TopLikedRecipes = () => {
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
+  const { isDark } = useTheme();
   const { data: topRecipes, isLoading } = useTopLikedRecipes(
     NUMBER_OF_TOP_RECIPES
   );

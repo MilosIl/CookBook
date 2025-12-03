@@ -5,7 +5,6 @@ import {
   useLikeRecipe,
   useShareRecipe,
   useUnlikeRecipe,
-  useUpdateRecipe,
 } from '@/hooks/useRecipes';
 import { useAuthStore } from '@/store/auth';
 import { useRecipeStore } from '@/store/recipe';
@@ -22,7 +21,7 @@ interface RecipeCardContainerProps {
 }
 
 export const RecipeCardContainer = ({ recipe }: RecipeCardContainerProps) => {
-  const { favoriteRecipeIds, toggleFavorite, LikedIds, addLike, removeLike } =
+  const { toggleFavorite, isFavorite, LikedIds, addLike, removeLike } =
     useRecipeStore();
   const { user } = useAuthStore();
   const { isDark } = useTheme();
@@ -32,19 +31,17 @@ export const RecipeCardContainer = ({ recipe }: RecipeCardContainerProps) => {
   const unlikeMutation = useUnlikeRecipe();
   const shareMutation = useShareRecipe();
   const deleteMutation = useDeleteRecipe();
-  const updateMutation = useUpdateRecipe();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
-  const [isHiding, setIsHiding] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   const { scaleAnim, animateScale } = useAnimation();
 
-  const isFavorite = favoriteRecipeIds.includes(recipe.id);
+  const isFavorited = user ? isFavorite(recipe.id, user.id) : false;
   const isLiked = LikedIds.includes(recipe.id);
-  const displayLikes = recipe.likes + (isLiked ? 1 : 0);
+  const displayLikes = recipe.likes;
   const isOwnRecipe = user?.id === recipe.user_id;
 
   const handleLike = async () => {
@@ -78,7 +75,9 @@ export const RecipeCardContainer = ({ recipe }: RecipeCardContainerProps) => {
   };
 
   const handleFavorite = () => {
-    toggleFavorite(recipe.id);
+    if (user) {
+      toggleFavorite(recipe.id, user.id);
+    }
   };
 
   const handleShare = async () => {
@@ -109,10 +108,8 @@ export const RecipeCardContainer = ({ recipe }: RecipeCardContainerProps) => {
                 user_id: user.id,
               };
 
-              // Share to database
               await shareMutation.mutateAsync(recipeToShare);
 
-              // Remove from local storage
               const stored = await AsyncStorage.getItem('recipes');
               if (stored) {
                 const recipes = JSON.parse(stored);
@@ -153,10 +150,7 @@ export const RecipeCardContainer = ({ recipe }: RecipeCardContainerProps) => {
           onPress: async () => {
             setIsDeleting(true);
             try {
-              const isLocalRecipe =
-                !recipe.user_id || recipe.id.startsWith('local_');
-
-              if (isLocalRecipe) {
+              if (!recipe.user_id) {
                 const stored = await AsyncStorage.getItem('recipes');
                 if (stored) {
                   const recipes = JSON.parse(stored);
@@ -188,42 +182,24 @@ export const RecipeCardContainer = ({ recipe }: RecipeCardContainerProps) => {
     );
   };
 
-  const handleHide = async () => {
-    setIsHiding(true);
-    try {
-      await updateMutation.mutateAsync({
-        id: recipe.id,
-        updates: { is_public: false },
-      });
-      Alert.alert('Success', 'Recipe is now hidden from public view');
-    } catch (error) {
-      console.error('Failed to hide recipe:', error);
-      Alert.alert('Error', 'Failed to hide recipe');
-    } finally {
-      setIsHiding(false);
-    }
-  };
-
   return (
     <>
       <RecipeCardView
         recipe={recipe}
         isDark={isDark}
-        isFavorite={isFavorite}
+        isFavorite={isFavorited}
         isLiked={isLiked}
         displayLikes={displayLikes}
         isOwnRecipe={isOwnRecipe}
         imageError={imageError}
         isDeleting={isDeleting}
         isSharing={isSharing}
-        isHiding={isHiding}
         scaleAnim={scaleAnim}
         onLike={handleLike}
         onFavorite={handleFavorite}
         onShare={handleShare}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        onHide={handleHide}
         onImageError={() => setImageError(true)}
       />
       <EditModal

@@ -1,5 +1,5 @@
 import { Input, InputField } from '@/components/ui/input';
-import { useResolvedTheme } from '@/store/theme';
+import { useTheme } from '@/store/theme';
 import { ComponentProps } from 'react';
 
 type ThemedInputProps = {
@@ -29,8 +29,7 @@ const ThemedInput = ({
   className = '',
   ...inputFieldProps
 }: ThemedInputProps) => {
-  const theme = useResolvedTheme();
-  const isDark = theme === 'dark';
+  const { isDark } = useTheme();
 
   return (
     <Input

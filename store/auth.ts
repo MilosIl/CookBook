@@ -8,6 +8,7 @@ type DatabaseUser = {
   email: string;
   first_name: string;
   last_name: string;
+  phoneNumber: string;
 };
 type SignUpForm = Omit<SignupFormData, 'confirmPassword'>;
 type AuthState = {
@@ -25,10 +26,15 @@ type AuthActions = {
     password,
     firstName,
     lastName,
+    phoneNumber,
   }: SignUpForm) => Promise<{ error: string | undefined }>;
   logout: () => Promise<void>;
   fetchDbUser: () => Promise<void>;
-  updateDbUser: (firstName: string, lastName: string) => Promise<void>;
+  updateDbUser: (
+    firstName: string,
+    lastName: string,
+    phoneNumber: string
+  ) => Promise<void>;
   checkSession: () => Promise<void>;
   clearError: () => void;
 };
@@ -68,19 +74,23 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  signup: async ({ email, password, firstName, lastName }: SignUpForm) => {
+  signup: async ({
+    email,
+    password,
+    firstName,
+    lastName,
+    phoneNumber,
+  }: SignUpForm) => {
     set({ isLoading: true, error: null });
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
-      console.log(error);
       if (error) {
         set({ isLoading: false, error: error.message });
         return { error: error.message };
       }
-
       if (!data.user) {
         const errorMsg = 'User creation failed';
         set({ isLoading: false, error: errorMsg });
@@ -156,7 +166,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     }
   },
 
-  updateDbUser: async (firstName: string, lastName: string) => {
+  updateDbUser: async (
+    firstName: string,
+    lastName: string,
+    phoneNumber: string
+  ) => {
     const { user } = get();
     if (!user) return;
 
@@ -167,11 +181,11 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         .update({
           first_name: firstName,
           last_name: lastName,
+          phoneNumber: phoneNumber,
         })
         .eq('id', user.id)
         .select()
         .single();
-
       if (error) throw error;
 
       set({ dbUser: data, isLoading: false });

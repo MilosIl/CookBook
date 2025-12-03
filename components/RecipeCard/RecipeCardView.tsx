@@ -21,14 +21,12 @@ interface RecipeCardViewProps {
   imageError: boolean;
   isDeleting: boolean;
   isSharing: boolean;
-  isHiding: boolean;
   scaleAnim: Animated.Value;
   onLike: () => void;
   onFavorite: () => void;
   onShare: () => void;
   onEdit: () => void;
   onDelete: () => void;
-  onHide: () => void;
   onImageError: () => void;
 }
 
@@ -42,14 +40,13 @@ export const RecipeCardView = ({
   imageError,
   isDeleting,
   isSharing,
-  isHiding,
   scaleAnim,
   onLike,
   onFavorite,
   onShare,
   onEdit,
   onDelete,
-  onHide,
+
   onImageError,
 }: RecipeCardViewProps) => {
   return (
@@ -143,20 +140,6 @@ export const RecipeCardView = ({
 
             {isOwnRecipe && (
               <>
-                <TouchableOpacity onPress={onHide} disabled={isHiding}>
-                  {isHiding ? (
-                    <ActivityIndicator
-                      size="small"
-                      color={isDark ? '#999999' : '#4A4A4A'}
-                    />
-                  ) : (
-                    <MaterialIcons
-                      name="visibility-off"
-                      size={24}
-                      color={isDark ? '#999999' : '#4A4A4A'}
-                    />
-                  )}
-                </TouchableOpacity>
                 <TouchableOpacity onPress={onEdit}>
                   <MaterialIcons
                     name="edit"
